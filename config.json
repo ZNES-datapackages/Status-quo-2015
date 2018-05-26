@@ -1,0 +1,35 @@
+{
+  "headers": {
+    "elements": [
+      "name",
+      "node_parameters",
+      "predecessors",
+      "successors",
+      "edge_parameters",
+      "type"
+    ]
+  },
+  "directories": {
+    "elements": "data/elements",
+    "sequences": "data/sequences",
+    "geometries": "data/geometries",
+    "archive": "archive",
+    "cache": "cache",
+    "scripts": "scripts"
+  },
+  "year": 2015,
+  "countries": [
+    "LU",
+    "NL",
+    "DK",
+    "SE",
+    "PL",
+    "CZ",
+    "AT",
+    "NO",
+    "BE",
+    "FR",
+    "CH",
+    "DE"
+  ]
+}

@@ -1,0 +1,12 @@
+year;name;emission;cost
+2015;coal;0.1;1
+2015;gas;0.1;1
+2015;lignite;0.1;1
+2015;waste;0.1;1
+2015;mixed-fuels;0.1;1
+2015;biomass;0.1;1
+2015;biogas;0.1;1
+2015;uranium;0.1;1
+2015;oil;0.1;1
+2015;co2;0.1;1
+2015;hydro;0;0

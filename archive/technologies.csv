@@ -1,0 +1,11 @@
+year;fuel;electrical-efficiency;variable-cost
+2015;coal;0.3;3
+2015;gas;0.3;3
+2015;lignite;0.3;3
+2015;waste;0.3;3
+2015;mixed-fuels;0.3;3
+2015;biomass;0.3;3
+2015;biogas;0.3;3
+2015;uranium;0.3;3
+2015;oil;0.3;3
+2015;hydro;0.3;0
