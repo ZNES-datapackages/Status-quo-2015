@@ -32,7 +32,7 @@ year = str(config['year'])
 
 raw_data = pd.read_csv(filepath, index_col=[0], parse_dates=True)
 
-elements = building.read_elements('volatile-generators.csv')
+elements = building.read_elements('volatile-generator.csv')
 
 mapper = {'wind-onshore': '_ON', 'wind-offshore': '_OFF'}
 
