@@ -85,7 +85,7 @@ def create_resource(path):
         print('Resource is not valid, writing resource anyway...')
         resource.save('resources/'+ resource.name + '.json')
 
-path = building.write_elements('demands.csv', pd.DataFrame.from_dict(elements, orient='index'))
+path = building.write_elements('demand.csv', pd.DataFrame.from_dict(elements, orient='index'))
 
 create_resource(path)
 

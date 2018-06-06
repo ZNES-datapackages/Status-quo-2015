@@ -96,7 +96,7 @@ for c in countries:
                 'tech': d}
             elements[element_name] = element
 
-path = building.write_elements('dispatchable-generators.csv',
+path = building.write_elements('dispatchable-generator.csv',
                         pd.DataFrame.from_dict(elements, orient='index'))
 create_resource(path)
 
@@ -127,7 +127,7 @@ for c in countries:
             elements[element_name] = element
 
 path = building.write_elements(
-    'volatile-generators.csv',
+    'volatile-generator.csv',
     pd.DataFrame.from_dict(elements, orient='index'))
 create_resource(path)
 
