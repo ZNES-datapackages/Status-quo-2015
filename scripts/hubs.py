@@ -22,6 +22,15 @@ def create_resource(path):
         'path': 'http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_10M_SH.zip',
         'files': ['NUTS_2013_10M_SH/data/NUTS_RG_10M_2013.shp',
                   'NUTS_2013_10M_SH/data/NUTS_RG_10M_2013.dbf']}]
+
+    if 'geometries' in path:
+
+        resource.descriptor['schema']['foreignKeys'] =   [{
+            "fields": "bus",
+            "reference": {
+                "resource": "bus",
+                "fields": "name"}}]
+
     resource.commit()
     resource.descriptor
 
@@ -55,8 +64,9 @@ hub_elements.loc[:, 'type'] = 'bus'
 hub_elements.loc[:, 'balanced'] = True
 hub_elements.loc[:, 'geometry'] = hubs.index
 
-building.write_geometries('bus.geojson', hubs)
+path = building.write_geometries('buses.csv', hubs)
+
+create_resource(path)
 
 path = building.write_elements('bus.csv', hub_elements)
-
 create_resource(path)
