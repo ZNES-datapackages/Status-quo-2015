@@ -3,27 +3,25 @@
 """
 
 import json
-
 import pandas as pd
 
 from datapackage_utilities import building
 
 
 config = building.get_config()
-
 filepath = building.download_data(
     'https://data.open-power-system-data.org/time_series/2017-07-09/' +
     'time_series_60min_singleindex.csv')
 
 raw_data = pd.read_csv(filepath, index_col=[0], parse_dates=True)
 
-suffix = '_load_old'
+suffix = '_load_entsoe_power_statistics'
 
 countries, year = config['countries'], str(config['year'])
 
 columns = [c + suffix for c in countries]
 
-timeseries = raw_data[year][columns]
+timeseries = raw_data.loc[year, columns]
 
 demand_total = timeseries.sum()
 
