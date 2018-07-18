@@ -3,7 +3,9 @@
 """
 
 import pandas as pd
+
 from datapackage_utilities import building
+from datapackage import Package
 
 def create_resource(path):
 
@@ -11,24 +13,28 @@ def create_resource(path):
     resource = Resource({'path': path})
     resource.infer()
     resource.descriptor['schema']['primaryKey'] = 'name'
-    resource.descriptor['description'] = 'Installed capacities, costs and technical parameters for components'
+    resource.descriptor['description'] = 'Installed capacities, costs and technical parameters for dispatchable generators'
     resource.descriptor['title'] = '{} components'.format(resource.name.title())
-    resource.descriptor['sources'] = [{
-        'title': 'Scenario Outlook and Adequacy Forecast 2014-2030',
-        'path': 'https://www.entsoe.eu/Documents/SDC%20documents/SOAF/140602_SOAF%202014_dataset.zip'
-    }]
+    resource.descriptor['sources'] = [
+        {
+            'title': 'powerplantmatching',
+            'path': 'https://github.com/FRESNA/powerplantmatching',
+            'files': ['Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv']
+        },
+        {
+            'title': 'Current and Prospective Costs of Electricity Generation until 2050',
+            'path': 'https://www.diw.de/documents/publikationen/73/diw_01.c.424566.de/diw_datadoc_2013-068.pdf'
+        },
+        {
+            'title': 'CO2 Emission Factors for Fossil Fuels',
+            'path': 'https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2_emission_factors_for_fossil_fuels_correction.pdf'
+        }]
 
     resource.descriptor['schema']['foreignKeys'] = [{
         "fields": "bus",
         "reference": {
             "resource": "bus",
             "fields": "name"}}]
-
-    if 'volatile-generator' in resource.name:
-        resource.descriptor['schema']['foreignKeys'] .append({
-            "fields": "profile",
-            "reference": {
-                "resource": "generator-profiles"}})
 
     resource.commit()
 
@@ -43,114 +49,80 @@ config = building.get_config()
 countries, year = config['countries'], config['year']
 
 t_data = pd.read_csv('archive/technologies.csv', sep=';', index_col=[0, 1])
-c_data = pd.read_csv('archive/commodities.csv', sep=';', index_col=[0, 1]) * 3.6
 
+c_data = pd.read_csv('archive/commodities.csv', sep=';', index_col=[0, 1])
+
+
+countrycodes = Package(
+        'https://raw.githubusercontent.com/datasets/country-codes/master/datapackage.json').\
+        get_resource('country-codes').read(keyed=True)
+
+countrynames = {
+        v['official_name_en']: i
+        for i in countries
+    for v in countrycodes if v['ISO3166-1-Alpha-2'] == i}
+
+
+# https://github.com/FRESNA/powerplantmatching
 path = building.download_data(
-    'https://www.entsoe.eu/Documents/SDC%20documents/' +
-    'SOAF/140602_SOAF%202014_dataset.zip', unzip_file='ScA.xlsx')
+    'https://media.githubusercontent.com/media/FRESNA/powerplantmatching/6378fd03b1ea461fe9c7a5c9c3801c9acbac52c2/data/out/Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv')
 
-xlsx = pd.ExcelFile(path)
 
-df = pd.DataFrame()
-for country in countries:
-    sheet = pd.read_excel(xlsx, sheet_name=country + ' (new)', header=[0, 1],
-                          index_col=0, skiprows=11)
-    s = sheet.loc[:, (year, slice(None))].mean(axis=1)
-    s.name = country
-    df = pd.concat([df, s], axis=1)
+df = pd.read_csv(path, encoding='utf-8')
+idx = ((df['Country'].isin(countrynames.keys())) & (~df['Fueltype'].isin(['Wind', 'Solar', 'Hydro'])))
+df = df.loc[idx, :]
+df['Technology'].fillna('Unknown', inplace=True)
+idx = df[((df['Fueltype'] == 'Natural Gas') & (df['Technology'] == 'Storage Technologies'))].index
+df.drop(idx, inplace=True)
 
-df.loc['pumped-storage'] = df.loc['Hydro power (total)', :] - df.loc['of which renewable hydro generation', :]
+# Other
+mapper = {('Bioenergy', 'Steam Turbine'): 'biomass',
+          ('Bioenergy', 'Unknown'): 'biomass',
+          ('Hard Coal', 'CCGT'): 'hard_coal_ccgt',
+          ('Hard Coal', 'Steam Turbine'): 'hard_coal_st',
+          ('Hard Coal', 'Unknown'): 'hard_coal_st',
+          ('Lignite', 'Steam Turbine'): 'lignite',
+          ('Natural Gas', 'CCGT'): 'gas_ccgt',
+          ('Natural Gas', 'OCGT'): 'gas_ocgt',
+          ('Natural Gas', 'Steam Turbine'): 'gas_st',
+          ('Natural Gas', 'Unknown'): 'gas_ccgt',
+          ('Nuclear', 'Unknown'): 'nuclear',
+          ('Nuclear', 'Steam Turbine'): 'nuclear',
+          ('Natural Gas', 'Steam Turbine'): 'nuclear',
+          ('Oil', 'CCGT'): 'oil',
+          ('Oil', 'OCGT'): 'oil',
+          ('Oil', 'Steam Turbine'): 'oil',
+          ('Oil', 'Unknown'): 'oil',
+          ('Other', 'Unknown'): 'waste',
+          ('Waste', 'Steam Turbine'): 'waste'}
 
-# create and write dispatchable generators
-mapper = {'Biomass': 'biomass',
-          'Gas': 'gas',
-          'Hard Coal': 'coal',
-          'Lignite': 'lignite',
-          'Mixed Fuels': 'mixed-fuels',
-          'Nuclear Power': 'uranium',
-          'Oil': 'oil',
-          'of which renewable hydro generation': 'hydro'}
+df.loc[:, 'Technology'] = [mapper[tuple(i)] for i in df[['Fueltype', 'Technology']].values]
 
-df_dispatchable = df.loc[mapper.keys()]
-df_dispatchable.rename(index=mapper, inplace=True)
+s = df.groupby(['Country', 'Technology'])['Capacity'].sum()
 
 elements = {}
-for c in countries:
-    for d in mapper.values():
-        element_name = d + '-' + c
 
-        marginal_cost = (
-            (c_data.loc[(year, d), 'cost'] +
-             c_data.loc[(year, d), 'emission'] *
-             c_data.loc[(year, 'co2'), 'cost']) /
-            t_data.loc[(year, d), 'electrical-efficiency'])
+for (c, t), capacity in s.iteritems():
 
-        installed_capacity = round(df_dispatchable.at[d, c], 4) * 1e3  # GW->MW
+    element_name = t + '-' + c
 
-        if installed_capacity > 1:
-            element = {
-                'capacity': installed_capacity,
-                'bus': c + '-electricity',
-                'marginal_cost': marginal_cost,
-                'type': 'generator',
-                'tech': d}
-            elements[element_name] = element
+    fuel = 'gas' if 'gas' in t else ('hard_coal' if 'coal' in t else t)
+
+    marginal_cost = (
+        (c_data.loc[(year, fuel), 'cost'] +
+            c_data.loc[(year, fuel), 'emission'] *
+            c_data.loc[(year, 'co2'), 'cost']) /
+        t_data.loc[(year, t), 'electrical-efficiency'])
+
+    element = {
+        'capacity': capacity,
+        'bus': c + '-electricity',
+        'marginal_cost': marginal_cost,
+        'type': 'generator',
+        'tech': t}
+
+    elements[element_name] = element
 
 path = building.write_elements('dispatchable-generator.csv',
-                        pd.DataFrame.from_dict(elements, orient='index'))
-create_resource(path)
-
-# create and write volatile generators
-mapper = {'Solar': 'solar',
-          'of which offshore': 'wind-offshore',
-          'of which onshore': 'wind-onshore'}
-
-df_volatile = df.loc[mapper.keys()]
-df_volatile.rename(index=mapper, inplace=True)
-
-elements = {}
-for c in countries:
-    for d in mapper.values():
-        element_name = d + '-' + c
-        sequence_name = element_name + '-profile'
-
-        installed_capacity = round(df_volatile.at[d, c], 4) * 1e3  # GW->MW
-
-        if installed_capacity > 1:
-            element = {
-                'capacity': installed_capacity,
-                'tech': d,
-                'dispatchable': False,
-                'profile': sequence_name,
-                'type': 'generator',
-                'bus': c + '-electricity'}
-            elements[element_name] = element
-
-path = building.write_elements(
-    'volatile-generator.csv',
-    pd.DataFrame.from_dict(elements, orient='index'))
-create_resource(path)
-
-# create and write pumped-hydro storages
-elements = {}
-for c in countries:
-    n = 'pumped-storage'
-    element_name = n + '-' + c
-    installed_capacity = round(df.at[n, c], 4) * 1e3  # GW->MW
-
-    if installed_capacity > 1:
-        element = {
-            'capacity': installed_capacity * 10,
-            'power': installed_capacity,
-            'bus': c + '-electricity',
-            'marginal_cost': 0,
-            'type': 'storage',
-            'tech': n,
-            'efficiency': 0.8,
-            'loss': 0
-            }
-        elements[element_name] = element
-
-path = building.write_elements('pumped-storage.csv',
                         pd.DataFrame.from_dict(elements, orient='index'))
 create_resource(path)
