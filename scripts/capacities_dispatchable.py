@@ -104,7 +104,7 @@ elements = {}
 
 for (c, t), capacity in s.iteritems():
 
-    element_name = t + '-' + c
+    element_name = t + '-' + countrynames[c]
 
     fuel = 'gas' if 'gas' in t else ('hard_coal' if 'coal' in t else t)
 
@@ -116,7 +116,7 @@ for (c, t), capacity in s.iteritems():
 
     element = {
         'capacity': capacity,
-        'bus': c + '-electricity',
+        'bus': countrynames[c] + '-electricity',
         'marginal_cost': marginal_cost,
         'type': 'generator',
         'tech': t}
