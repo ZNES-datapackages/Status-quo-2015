@@ -6,7 +6,10 @@ import pandas as pd
 
 from datapackage_utilities import building
 
-config = building.get_config()
+# TODO: replace EMHIRES (downscaled MERRA data) with ERA-5
+# https://www.sciencedirect.com/science/article/pii/S0960148118303677
+
+# TODO: check if timeseries localized
 
 
 def create_resource(path):
@@ -14,34 +17,155 @@ def create_resource(path):
     resource = Resource({'path': path})
     resource.infer()
     resource.descriptor['schema']['primaryKey'] = 'timeindex'
-    resource.descriptor['description'] = 'PV profiles (capacity factors) from renewables ninja for each country'
-    resource.descriptor['title'] = 'PV profiles'
-    resource.descriptor['sources'] = [{
-        'title': 'Renewables Ninja PV Capacity Factors',
-        'path': 'https://www.renewables.ninja/static/downloads/ninja_europe_pv_v1.1.zip'}]
+    resource.descriptor['description'] = 'EMHIRES capacity factors for wind onshore, offshore and solar power'
+    resource.descriptor['title'] = 'Solar and wind profiles'
+    resource.descriptor['sources'] = [
+        {
+            'title': 'Gonzalez Aparicio, Iratxe; Zucker, Andreas; Careri, Francesco; Monforti Ferrario, Fabio; Huld, Thomas; Badger, Jake (2016):  Wind hourly generation time series at country, NUTS 1, NUTS 2 level and bidding zones. European Commission, Joint Research Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/jrc-emhires-wind-generation-time-series',
+            'path': 'http://data.jrc.ec.europa.eu/dataset/jrc-emhires-wind-generation-time-series'
+        },
+        {
+            'title': 'Gonzalez Aparicio, Iratxe (2017):  Solar hourly generation time series at country, NUTS 1, NUTS 2 level and bidding zones. European Commission, Joint Research Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/jrc-emhires-solar-generation-time-series',
+            'path': 'http://data.jrc.ec.europa.eu/dataset/jrc-emhires-solar-generation-time-series'
+        },
+        {
+            'title': 'EMHIRES datasets',
+            'path': 'https://setis.ec.europa.eu/EMHIRES-datasets',
+            'files': ['TS_CF_COUNTRY_30yr_date.zip',
+                      'TS_CF_OFFSHORE_30yr_date.zip',
+                      'EMHIRESPV_country_level.zip']
+        }]
+
     resource.commit()
 
     if resource.valid:
         resource.save('resources/' + resource.name + '.json')
 
-filepath = building.download_data(
-    "https://www.renewables.ninja/static/downloads/ninja_europe_pv_v1.1.zip",
-    unzip_file='ninja_pv_europe_v1.1_merra2.csv')
-
-
+config = building.get_config()
 countries, year = config['countries'], str(config['year'])
 
-raw_data = pd.read_csv(filepath, index_col=[0], parse_dates=True)
+sources = [
+        (
+            'wind-onshore',
+            'http://setis.ec.europa.eu/sites/default/files/EMHIRES_DATA/TS_CF_COUNTRY_30yr_date.zip',
+            'TS.CF.COUNTRY.30yr.date.txt'
+        ),
+        (
+            'wind-offshore',
+            'http://setis.ec.europa.eu/sites/default/files/EMHIRES_DATA/TS_CF_OFFSHORE_30yr_date.zip',
+            'TS.CF.OFFSHORE.30yr.date.txt'
+        )]
 
-df = raw_data.loc[year][countries]
+# create wind-onshore / wind-offshore profiles
+for tech, filepath, filename in sources:
+    df = pd.read_csv(
+        building.download_data(filepath, unzip_file=filename), sep='\t')
 
-sequences_df = pd.DataFrame(index=df.index)
+    timesteps = df.loc[df['Year'] == 2015, :].index
 
-for c in df.columns:
-    sequence_name = 'solar-' + c + '-profile'
-    sequences_df[sequence_name] = df[c].values
+    df.index = pd.to_datetime(df[['Year', 'Month', 'Day', 'Hour']])
+    df = df.loc[year, [c for c in countries if c in df.columns]]
+    df.rename(columns={c: tech + '-' + c + '-profile' for c in countries}, inplace=True)
 
-sequences_df.index = building.timeindex()
-path = building.write_sequences('generator-profiles.csv', sequences_df)
+    path = building.write_sequences('generator-profiles.csv', df)
+    create_resource(path)
 
+# create solar profiles
+df = pd.read_csv(
+    building.download_data(
+        'https://setis.ec.europa.eu/sites/default/files/EMHIRES_DATA/Solar/'
+        + 'EMHIRESPV_country_level.zip',
+        unzip_file='EMHIRESPV_TSh_CF_Country_19862015.txt'),
+    sep=' ')
+
+df = df.loc[timesteps, [c for c in countries if c in df.columns]]
+df.index = pd.date_range(
+    '2015-01-01 00:00:00', '2015-12-31 23:00:00', freq='H')
+
+df.rename(columns={c: 'solar' + '-' + c + '-profile' for c in countries},
+          inplace=True)
+
+path = building.write_sequences('generator-profiles.csv', df)
+create_resource(path)
+
+# wind / solar capacities
+filepath = building.download_data(
+    'https://ec.europa.eu/energy/sites/ener/files/documents/'
+    'countrydatasheets_june2018.xlsx')
+
+# https://www.sciencedirect.com/science/article/pii/S136403211731002X
+wind_offshore_capacities = {'BE': 712,
+                            'DK': 1273,
+                            'DE': 3547,
+                            'NL': 376}  # 'SE': 216} EMHIRES profile missing
+
+xl = pd.ExcelFile(filepath)
+
+elements = {}
+for c in countries:
+    df = xl.parse(
+        'DE', header=0, index_col=2, skiprows=7, keep_default_na=False)
+    wind_total = df.loc['Wind Cumulative Installed Capacity - MW', int(year)]
+
+    # wind-offshore
+    if c in wind_offshore_capacities:
+
+        element_name = 'wind-offshore-' + c
+
+        element = {
+            'capacity': wind_offshore_capacities[c],
+            'bus': c + '-electricity',
+            'profile': 'wind-offshore-' + c + '-profile',
+            'type': 'generator',
+            'tech': 'wind-offshore'}
+
+        elements[element_name] = element
+
+        wind_total -= wind_offshore_capacities[c]
+
+    # wind-onshore
+    element_name = 'wind-onshore-' + c
+
+    element = {
+        'capacity': wind_total,
+        'bus': c + '-electricity',
+        'profile': 'wind-onshore-' + c + '-profile',
+        'type': 'generator',
+        'tech': 'wind-onshore'}
+
+    elements[element_name] = element
+
+    # solar
+    element_name = 'solar-' + c
+
+    element = {
+        'capacity': df.loc['Solar Total Installed Capacity - MW', int(year)],
+        'bus': c + '-electricity',
+        'profile': 'solar' + c + '-profile',
+        'type': 'generator',
+        'tech': 'solar'}
+
+    elements[element_name] = element
+
+def create_resource(path):
+    from datapackage import Resource
+    resource = Resource({'path': path})
+    resource.infer()
+    resource.descriptor['schema']['primaryKey'] = 'timeindex'
+    resource.descriptor['description'] = 'Data on solar, wind-onshore and wind-offshore components'
+    resource.descriptor['title'] = 'Solar and wind components'
+    resource.descriptor['sources'] = [
+        {
+            'title': 'EU Commission, DG ENER, Unit A4 - ENERGY STATISTICS',
+            'path': 'https://ec.europa.eu/energy/sites/ener/files/documents/countrydatasheets_june2018.xlsx',
+            'files': ['countrydatasheets_june2018.xlsx']
+        }]
+
+    resource.commit()
+
+    if resource.valid:
+        resource.save('resources/' + resource.name + '.json')
+
+path = building.write_elements('volatile-generator.csv',
+                        pd.DataFrame.from_dict(elements, orient='index'))
 create_resource(path)
