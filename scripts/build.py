@@ -13,10 +13,10 @@ config = building.get_config()
 building.initialize_dpkg()
 
 import hubs
-import capacities_europe
-import capacity_factors_pv
-import capacity_factors_wind
-import load_europe
-import grid_europe
+import capacities_dispatchable
+import capacities_volatile
+import capacities_hydro
+import load
+import grid
 
 import update_metadata
