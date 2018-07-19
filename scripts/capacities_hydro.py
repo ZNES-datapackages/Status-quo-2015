@@ -184,6 +184,7 @@ for c in countries:
             'capacity': installed_capacity,
             'bus': c + '-electricity',
             'marginal_cost': 0,
+            'dispatchable': False,
             'profile': sequence_name,
             'type': 'runofriver',
             'tech': 'run-of-river'}
