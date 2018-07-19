@@ -18,5 +18,6 @@ import capacities_volatile
 import capacities_hydro
 import load
 import grid
+import slack
 
 import update_metadata
