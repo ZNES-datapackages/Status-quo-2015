@@ -50,13 +50,13 @@ def create_elements_resource(path):
             "fields": "name"}}]
 
     if 'run-of-river' in resource.name:
-        resource.descriptor['schema']['foreignKeys'] .append({
+        resource.descriptor['schema']['foreignKeys'].append({
             "fields": "profile",
             "reference": {
                 "resource": "hydro-profiles"}})
 
     if 'reservoir' in resource.name:
-        resource.descriptor['schema']['foreignKeys'] .append({
+        resource.descriptor['schema']['foreignKeys'].append({
             "fields": "inflow",
             "reference": {
                 "resource": "hydro-profiles"}})
@@ -140,6 +140,7 @@ hydro_capacities = pd.read_csv(
         'https://zenodo.org/record/804244/files/hydropower.csv?download=1'
     ), index_col=['ctrcode'])
 
+# TODO: move to archive
 # add missing Switzerland
 # https://www.eia.gov/beta/international/data/browser/#/?pa=0000000000000000000000804&c=00000008&ct=0&ug=8&tl_type=a&tl_id=7-A&vs=INTL.33-7-CHE-MK.A&vo=0&v=H&start=2015&end=2015&s=INTL.33-12-DEU-BKWH.A
 # http://www.bfe.admin.ch/php/modules/publikationen/stream.php?extlang=de&name=de_683819047.pdf&endung=F%FCllungsgrad%20der%20Speicherseen%202015,%20Sonntag%2024h,%20Wochenbericht%20Speicherinhalt

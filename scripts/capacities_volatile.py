@@ -36,6 +36,7 @@ def create_resource(path):
                       'EMHIRESPV_country_level.zip']
         }]
 
+
     resource.commit()
 
     if resource.valid:
@@ -141,7 +142,7 @@ for c in countries:
     element = {
         'capacity': df.loc['Solar Total Installed Capacity - MW', int(year)],
         'bus': c + '-electricity',
-        'profile': 'solar' + c + '-profile',
+        'profile': 'solar-' + c + '-profile',
         'type': 'generator',
         'tech': 'solar'}
 
@@ -161,10 +162,21 @@ def create_resource(path):
             'files': ['countrydatasheets_june2018.xlsx']
         }]
 
+    resource.descriptor['schema']['foreignKeys'] = [{
+        "fields": "bus",
+        "reference": {
+            "resource": "bus",
+            "fields": "name"}}]
+
+
+    resource.descriptor['schema']['foreignKeys'].append({
+        "fields": "profile",
+        "reference": {
+            "resource": "generator-profiles"}})
+
     resource.commit()
 
-    if resource.valid:
-        resource.save('resources/' + resource.name + '.json')
+    resource.save('resources/' + resource.name + '.json')
 
 path = building.write_elements('volatile-generator.csv',
                         pd.DataFrame.from_dict(elements, orient='index'))
