@@ -50,16 +50,13 @@ countries, year = config['countries'], config['year']
 
 c_data = pd.read_csv('archive/cost.csv', sep=';', index_col=[0, 1, 2])
 
-
-countrycodes = Package(
+country_naming = Package(
         'https://raw.githubusercontent.com/datasets/country-codes/master/datapackage.json').\
         get_resource('country-codes').read(keyed=True)
 
-countrynames = {
-        v['official_name_en']: i
-        for i in countries
-    for v in countrycodes if v['ISO3166-1-Alpha-2'] == i}
-
+name_to_isocode = {
+    i['official_name_en']: c for c in countries
+        for i in country_naming if i['ISO3166-1-Alpha-2'] == c}
 
 # https://github.com/FRESNA/powerplantmatching
 path = building.download_data(
@@ -67,7 +64,7 @@ path = building.download_data(
 
 
 df = pd.read_csv(path, encoding='utf-8')
-idx = ((df['Country'].isin(countrynames.keys())) & (~df['Fueltype'].isin(['Wind', 'Solar', 'Hydro'])))
+idx = ((df['Country'].isin(name_to_isocode.keys())) & (~df['Fueltype'].isin(['Wind', 'Solar', 'Hydro'])))
 df = df.loc[idx, :]
 df['Technology'].fillna('Unknown', inplace=True)
 idx = df[((df['Fueltype'] == 'Natural Gas') & (df['Technology'] == 'Storage Technologies'))].index
@@ -102,7 +99,7 @@ elements = {}
 
 for (c, t), capacity in s.iteritems():
 
-    element_name = t + '-' + countrynames[c]
+    element_name = t + '-' + name_to_isocode[c]
 
     fuel = 'gas' if 'gas' in t else ('hard_coal' if 'coal' in t else t)
 
@@ -114,7 +111,7 @@ for (c, t), capacity in s.iteritems():
 
     element = {
         'capacity': capacity,
-        'bus': countrynames[c] + '-electricity',
+        'bus': name_to_isocode[c] + '-electricity',
         'marginal_cost': marginal_cost,
         'type': 'generator',
         'tech': t}
