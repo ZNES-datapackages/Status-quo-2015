@@ -1,9 +1,0 @@
-year;name;emission;source;cost;source
-2015;hard_coal;0.34;UBA 2016 - CO2 Emission Factors for Fossil Fuels Raw - p. 45 hard coal (power stations, industry);8.4;DIW 2013
-2015;gas;0.20;UBA 2016 - p.45 Natural gas, Germany;21.6;DIW 2013
-2015;lignite;0.41;UBA 2016 - p.45 Rhineland;2.9;DIW 2013
-2015;waste;0.30;;7;
-2015;biomass;0.00;;7;DIW 2013
-2015;nuclear;0.00;;3;DIW 2013
-2015;oil;0.27;UBA 2016 - p.45 Diesel fuel, Germany;1;
-2015;co2;;;8;
