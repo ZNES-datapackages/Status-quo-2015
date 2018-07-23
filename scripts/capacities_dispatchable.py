@@ -48,9 +48,7 @@ def create_resource(path):
 config = building.get_config()
 countries, year = config['countries'], config['year']
 
-t_data = pd.read_csv('archive/technologies.csv', sep=';', index_col=[0, 1])
-
-c_data = pd.read_csv('archive/commodities.csv', sep=';', index_col=[0, 1])
+c_data = pd.read_csv('archive/cost.csv', sep=';', index_col=[0, 1, 2])
 
 
 countrycodes = Package(
@@ -109,10 +107,10 @@ for (c, t), capacity in s.iteritems():
     fuel = 'gas' if 'gas' in t else ('hard_coal' if 'coal' in t else t)
 
     marginal_cost = (
-        (c_data.loc[(year, fuel), 'cost'] +
-            c_data.loc[(year, fuel), 'emission'] *
-            c_data.loc[(year, 'co2'), 'cost']) /
-        t_data.loc[(year, t), 'electrical-efficiency'])
+        (c_data.loc[(year, t, 'variable-cost'), 'value'] +
+            c_data.loc[(year, fuel, 'emission-factor'), 'value'] *
+            c_data.loc[(year, 'co2', 'cost'), 'value']) /
+        c_data.loc[(year, t, 'electrical-efficiency'), 'value'])
 
     element = {
         'capacity': capacity,

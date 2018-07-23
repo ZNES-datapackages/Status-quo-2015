@@ -94,27 +94,34 @@ filepath = building.download_data(
     'https://ec.europa.eu/energy/sites/ener/files/documents/'
     'countrydatasheets_june2018.xlsx')
 
-# https://www.sciencedirect.com/science/article/pii/S136403211731002X
-wind_offshore_capacities = {'BE': 712,
-                            'DK': 1273,
-                            'DE': 3547,
-                            'NL': 376}  # 'SE': 216} EMHIRES profile missing
+
+c_data = pd.read_csv('archive/capacities.csv', sep=';', index_col=[0, 1, 2])
+
+wind_off_capas = c_data.loc[pd.IndexSlice[:, :, 'wind-offshore'], :].\
+    reset_index(level=['year', 'technology'])
+
+# EMHIRES profile for wind-offshore Sweden not available
+wind_off_capas.drop(index=['SE'], inplace=True)
 
 xl = pd.ExcelFile(filepath)
 
 elements = {}
 for c in countries:
-    df = xl.parse(
-        'DE', header=0, index_col=2, skiprows=7, keep_default_na=False)
-    wind_total = df.loc['Wind Cumulative Installed Capacity - MW', int(year)]
+    if c in ['NO', 'CH']:
+        wind_total = c_data.loc[(int(year), c, 'wind-total'), 'value']
+
+    else:
+        df = xl.parse(
+            c, header=0, index_col=2, skiprows=7, keep_default_na=False)
+        wind_total = df.loc['Wind Cumulative Installed Capacity - MW', int(year)]
 
     # wind-offshore
-    if c in wind_offshore_capacities:
+    if c in wind_off_capas.index:
 
         element_name = 'wind-offshore-' + c
 
         element = {
-            'capacity': wind_offshore_capacities[c],
+            'capacity': wind_off_capas.loc[c, 'value'],
             'bus': c + '-electricity',
             'profile': 'wind-offshore-' + c + '-profile',
             'type': 'generator',
@@ -122,7 +129,7 @@ for c in countries:
 
         elements[element_name] = element
 
-        wind_total -= wind_offshore_capacities[c]
+        wind_total -= wind_off_capas.loc[c, 'value']
 
     # wind-onshore
     element_name = 'wind-onshore-' + c

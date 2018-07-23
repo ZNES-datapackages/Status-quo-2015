@@ -41,7 +41,7 @@ config = building.get_config()
 loss = 0.03
 countries = config['countries']
 
-filepath = building.input_filepath('transmission-data.csv')
+filepath = building.input_filepath('transmission.csv')
 
 data = pd.read_csv(filepath, skiprows=3, sep=';', index_col=['from', 'to'])
 
