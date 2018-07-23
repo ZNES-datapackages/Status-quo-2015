@@ -1,0 +1,8 @@
+year;country;technology;value;unit;source
+2015;BE;wind-offshore;712;MW;https://doi.org/10.1016/j.rser.2017.06.052
+2015;DK;wind-offshore;1273;MW;https://doi.org/10.1016/j.rser.2017.06.053
+2015;DE;wind-offshore;3547;MW;https://doi.org/10.1016/j.rser.2017.06.054
+2015;NL;wind-offshore;376;MW;https://doi.org/10.1016/j.rser.2017.06.052
+2015;SE;wind-offshore;216;MW;https://doi.org/10.1016/j.rser.2017.06.052
+2015;NO;wind-total;900;MW;https://www.eia.gov/beta/international/data/browser/#/?pa=00000000000000000000000g&c=000000080000000000000000000000000g&ct=0&ug=8&tl_type=a&tl_id=7-A&vs=INTL.37-7-NOR-MK.A&vo=0&v=H&start=2011&end=2015&s=INTL.33-12-DE
+2015;CH;wind-total;60.3;MW;Bundesamt für Energie - BFE (2016). Schweizerische Statistik der erneuerbaren Energien - Ausgabe 2015. Bern, p.32. Available at: http://www.bfe.admin.ch/php/modules/publikationen/stream.php?extlang=de&name=de_818961010.pdf&endung=Schweizerische%20Statistik%20der%20erneuerbaren%20Energien [Accessed 23 July 2018].
