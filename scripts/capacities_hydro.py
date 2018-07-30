@@ -103,6 +103,7 @@ config = building.get_config()
 countries, year = config['countries'], config['year']
 
 c_data = pd.read_csv('archive/cost.csv', sep=';', index_col=[0, 1, 2])
+capas = pd.read_csv('archive/capacities.csv', sep=';', index_col=[0, 1, 2])
 
 country_naming = pd.DataFrame(
     Package(
@@ -143,21 +144,21 @@ hydro_capacities = pd.read_csv(
         'https://zenodo.org/record/804244/files/hydropower.csv?download=1'
     ), index_col=['ctrcode'])
 
-# TODO: move to archive
-# add missing Switzerland
-# https://www.eia.gov/beta/international/data/browser/#/?pa=0000000000000000000000804&c=00000008&ct=0&ug=8&tl_type=a&tl_id=7-A&vs=INTL.33-7-CHE-MK.A&vo=0&v=H&start=2015&end=2015&s=INTL.33-12-DEU-BKWH.A
-# http://www.bfe.admin.ch/php/modules/publikationen/stream.php?extlang=de&name=de_683819047.pdf&endung=F%FCllungsgrad%20der%20Speicherseen%202015,%20Sonntag%2024h,%20Wochenbericht%20Speicherinhalt
+swiss_hydro_capacities = capas.loc[(
+    2015, 'CH', ['reservoir', 'hydro', 'pumped-storage']), :].value
+
 hydro_capacities = hydro_capacities.append(
-    pd.Series(dict(zip(hydro_capacities.columns, [8.8, 12.0, 1.9])), name='CH'))
+    pd.Series(dict(zip(hydro_capacities.columns,
+                       swiss_hydro_capacities)), name='CH'))
+
+# remove countries without hydro capacities
+countries = [c for c in countries if ~(hydro_capacities == 0.0).all(axis=1)[c]]
 
 run_of_river_shares = pd.read_csv(
     building.download_data(
         'https://zenodo.org/record/804244/files/Run-Of-River%20Shares.csv?download=1'
     ), index_col=['ctrcode'])
 
-# add missing Denmark
-run_of_river_shares = run_of_river_shares.append(
-    pd.Series({'run-of-river share': 0}, name='DK'))
 
 cutout = atlite.Cutout(name='eu-2015/eu-2015/', cutout_dir=config['directories']['cache'])
 
