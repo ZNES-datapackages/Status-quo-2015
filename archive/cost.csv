@@ -24,6 +24,7 @@ year;technology;parameter;value;unit;source
 2015;nuclear;electrical-efficiency;0.332;per unit;DIW 2013
 2015;oil;electrical-efficiency;0.410;per unit;DIW 2013
 2015;waste;electrical-efficiency;0.410;per unit;
+2015;pumped-storage;electrical-efficiency (round trip);0.75;per unit;DIW 2013
 2015;biomass;variable-cost;0.0;EUR / MWh;
 2015;hard_coal_ccgt;variable-cost;6.0;EUR / MWh;
 2015;hard_coal_st;variable-cost;6.0;EUR / MWh;DIW 2013

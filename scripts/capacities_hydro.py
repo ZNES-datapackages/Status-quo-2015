@@ -8,6 +8,7 @@ for sharing!
 
 import os
 import atlite
+import math
 
 import pandas as pd
 
@@ -100,6 +101,8 @@ def create_sequences_resource(path):
 
 config = building.get_config()
 countries, year = config['countries'], config['year']
+
+c_data = pd.read_csv('archive/cost.csv', sep=';', index_col=[0, 1, 2])
 
 country_naming = pd.DataFrame(
     Package(
@@ -237,6 +240,10 @@ create_sequences_resource(path)
 elements = {}
 sequences = pd.DataFrame(index=building.timeindex())
 
+round_trip_eta = c_data.loc[(
+    slice(None), 'pumped-storage', 'electrical-efficiency (round trip)'), :].\
+    value
+
 for c in countries:
     element_name = 'pumped-storage-' + c
 
@@ -250,8 +257,8 @@ for c in countries:
             'capacity': installed_capacity * 10,
             'p_max': installed_capacity,
             'p_min': 0,
-            'charging_efficiency': 0.8,  # TODO: sources
-            'discharging_efficiency': 0.8,
+            'charging_efficiency': math.sqrt(round_trip_eta),
+            'discharging_efficiency': math.sqrt(round_trip_eta),
             'type': 'storage',
             'tech': 'pumped-storage'}
         elements[element_name] = element
