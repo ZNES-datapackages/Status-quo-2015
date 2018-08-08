@@ -7,13 +7,23 @@ for sharing!
 """
 
 import os
-import atlite
 import math
 
 import pandas as pd
 
 from datapackage import Package, Resource
-from datapackage_utilities import building, geometry
+from datapackage_utilities import building
+
+
+def is_leap_and_Feb29(s):
+    """ Adapted from: https://stackoverflow.com/questions/34966422/remove-leap-year-day-from-pandas-dataframe
+    """
+    return (
+        (s.index.is_leap_year) &
+        (s.index.month == 2) &
+        (s.index.day == 29))
+
+
 
 
 def create_elements_resource(path):
