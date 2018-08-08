@@ -190,15 +190,32 @@ run_of_river_shares = pd.read_csv(
         'Run-Of-River%20Shares.csv?download=1'
     ), index_col=['ctrcode'])
 
+# Inflow timeseries 2003-2012
+# http://doi.org/10.5281/zenodo.804244
+hyd_inflow = (get_hydro_inflow(
+    [c for c in countries if c != 'LU'],
+    building.download_data(
+        'https://zenodo.org/record/804244/files/Hydro_Inflow.zip?download=1',
+        unzip_file='Hydro_Inflow/')))
 
-cutout = atlite.Cutout(name='eu-2015/eu-2015/', cutout_dir=config['directories']['cache'])
+# remove leap year hours
+hyd_inflow = hyd_inflow[~is_leap_and_Feb29(hyd_inflow)]
 
-# parametrization as seen on https://github.com/FRESNA/vresutils/blob/master/vresutils/hydro.py
-# TODO: this is based on NCEP
-inflow_timeseries = cutout.runoff(shapes=country_polygons,
-                                  smooth=24,
-                                  lower_threshold_quantile=0.01,
-                                  normalize_using_yearly=hydro_yearly_total.T)
+# TODO: normalization already occours in get_hydro_inflow
+# mean hourly value
+idx = hyd_inflow.index
+inflow_timeseries = hyd_inflow.groupby([idx.month, idx.day, idx.hour]).mean()
+
+# assume Belgian inflow curve for Luxembourg
+inflow_timeseries['LU'] = inflow_timeseries['BE'].copy()
+
+inflow_timeseries.index = pd.date_range(
+    '2015-01-01 00:00:00', '2015-12-31 23:00:00', freq='H')
+
+# normalize with hydro total electricity generation
+inflow_timeseries = (
+        inflow_timeseries * hydro_total / inflow_timeseries.sum()).\
+    dropna(axis=1)
 
 # run-of-river
 elements = {}
