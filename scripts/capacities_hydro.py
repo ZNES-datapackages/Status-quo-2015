@@ -168,7 +168,7 @@ hydro_total *= 1e6  # billion kWh -> MWh
 
 # reservoir capacity, hydro capacity, pumped hydro capacity for Europe
 # http://doi.org/10.5281/zenodo.804244
-# TODO: replace with Status quo hydro capacities
+# TODO: replace with Status quo hydro capacities?
 hydro_capas = pd.read_csv(
     building.download_data(
         'https://zenodo.org/record/804244/files/hydropower.csv?download=1'
@@ -269,11 +269,6 @@ for c in countries:
 
     inflow = inflow_timeseries[c].values \
         * (1 - run_of_river_shares.at[c, 'run-of-river share'])
-
-    inflow /= installed_capacity
-
-    # excess runoff
-    inflow[inflow > 1] = 1
 
     if installed_capacity > 1:
         element = {
