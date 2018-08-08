@@ -140,61 +140,54 @@ def create_sequences_resource(path):
 config = building.get_config()
 countries, year = config['countries'], config['year']
 
+# load archive files
 c_data = pd.read_csv('archive/cost.csv', sep=';', index_col=[0, 1, 2])
 capas = pd.read_csv('archive/capacities.csv', sep=';', index_col=[0, 1, 2])
 
+# download country-codes datapackage
+# TODO: retrieve from archive
 country_naming = pd.DataFrame(
     Package(
         'https://raw.githubusercontent.com/datasets/country-codes/5b645f4ea861be1362539d06641e5614353c9895/datapackage.json'
         ).get_resource('country-codes').read(keyed=True))
 
 country_naming.set_index(['official_name_en'], inplace=True)
-
 name_to_isocode = country_naming['ISO3166-1-Alpha-2'].to_dict()
 
-#
-filepath = os.path.join(config['directories']['cache'],
-                        'NUTS_2013_10M_SH/data/NUTS_RG_10M_2013.shp')
-country_polygons = pd.Series(
-    geometry.nuts(filepath, nuts=0)).filter(config['countries'])
-country_polygons.index.name = 'countries'
-
-#
-hydro_yearly_total = pd.read_csv(
+# EIA hydro electricity generation 2015
+hydro_total = pd.read_csv(
         os.path.join(
             config['directories']['archive'],
             'EIA-annual-hydro-generation.csv'),
         skiprows=4, index_col=1
-    ).drop(['Unnamed: 0', 'Unnamed: 2'], axis=1).dropna()
+    ).drop(['Unnamed: 0', 'Unnamed: 2'], axis=1).dropna().loc[:, str(year)]
 
-hydro_yearly_total.rename(index={'Czech Republic': 'Czechia'}, inplace=True)
-hydro_yearly_total.rename(index=name_to_isocode, inplace=True)
+hydro_total = hydro_total.rename(index={'Czech Republic': 'Czechia'}).\
+    rename(index=name_to_isocode).T
+hydro_total *= 1e6  # billion kWh -> MWh
 
-hyrdo_yearly_total = hydro_yearly_total * 1e6  # billion kWh -> MWh
-hydro_yearly_total.index.name = 'countries'
-
-
-building.download_data(
-    'sftp://atlite.openmod.net/home/atlite/cutouts/eu-2015.zip', unzip_file='eu-2015/')
-
-hydro_capacities = pd.read_csv(
+# reservoir capacity, hydro capacity, pumped hydro capacity for Europe
+# http://doi.org/10.5281/zenodo.804244
+# TODO: replace with Status quo hydro capacities
+hydro_capas = pd.read_csv(
     building.download_data(
         'https://zenodo.org/record/804244/files/hydropower.csv?download=1'
     ), index_col=['ctrcode'])
 
-swiss_hydro_capacities = capas.loc[(
+_swiss_capas = capas.loc[(
     2015, 'CH', ['reservoir', 'hydro', 'pumped-storage']), :].value
 
-hydro_capacities = hydro_capacities.append(
-    pd.Series(dict(zip(hydro_capacities.columns,
-                       swiss_hydro_capacities)), name='CH'))
+hydro_capas = hydro_capas.append(
+    pd.Series(dict(zip(hydro_capas.columns, _swiss_capas)), name='CH'))
 
-# remove countries without hydro capacities
-countries = [c for c in countries if ~(hydro_capacities == 0.0).all(axis=1)[c]]
+# remove countries w/o hydro capacities
+countries = [c for c in countries if ~(hydro_capas == 0.0).all(axis=1)[c]]
 
+# http://doi.org/10.5281/zenodo.804244
 run_of_river_shares = pd.read_csv(
     building.download_data(
-        'https://zenodo.org/record/804244/files/Run-Of-River%20Shares.csv?download=1'
+        'https://zenodo.org/record/804244/files/'
+        'Run-Of-River%20Shares.csv?download=1'
     ), index_col=['ctrcode'])
 
 
