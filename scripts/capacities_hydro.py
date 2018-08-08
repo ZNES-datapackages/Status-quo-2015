@@ -24,6 +24,34 @@ def is_leap_and_Feb29(s):
         (s.index.day == 29))
 
 
+def get_hydro_inflow(countries, inflow_dir=None):
+    """ Return hydro inflow data for given countries. [GWh]
+
+    Notes
+    -----
+    Copied and adapted from: https://github.com/FRESNA/vresutils,
+    Copyright 2015-2017 Frankfurt Institute for Advanced Studies
+    """
+
+    def read_inflow(country):
+        return (pd.read_csv(os.path.join(inflow_dir,
+                                         'Hydro_Inflow_{}.csv'.format(country)),
+                            parse_dates={'time': [0,1,2]})
+                .set_index('time')['Inflow [GWh]'])
+
+    hyd = pd.DataFrame({cname: read_inflow(cname) for cname in countries})
+
+    hyd.columns.name = 'countries'
+
+    hydro = hyd.resample('H').interpolate('cubic')
+
+    if True: #default norm
+        normalization_factor = (hydro.index.size/float(hyd.index.size)) #normalize to new sampling frequency
+    else:
+        normalization_factor = hydro.sum() / hyd.sum() #conserve total inflow for each country separately
+    hydro /= normalization_factor
+
+    return hydro
 
 
 def create_elements_resource(path):
