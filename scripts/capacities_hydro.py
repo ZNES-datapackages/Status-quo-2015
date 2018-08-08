@@ -306,6 +306,8 @@ for c in countries:
     if installed_capacity > 1:
         element = {
             'bus': c + '-electricity',
+            # TODO: capacity for PHS (2011/2010) better?
+            # https://ec.europa.eu/jrc/sites/jrcsh/files/jrc_20130503_assessment_european_phs_potential.pdf
             'capacity': installed_capacity * 10,
             'p_max': installed_capacity,
             'p_min': 0,
