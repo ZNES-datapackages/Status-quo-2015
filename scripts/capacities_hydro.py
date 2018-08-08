@@ -226,11 +226,14 @@ for c in countries:
     sequence_name = 'run-of-river-' + c + '-profile'
 
     installed_capacity = \
-        hydro_capacities.at[c, ' installed hydro capacities [GW]'] \
+        hydro_capas.at[c, ' installed hydro capacities [GW]'] \
         * run_of_river_shares.at[c, 'run-of-river share'] * 1e3  # GW -> MW
 
-    inflow = inflow_timeseries.loc[c, :].data \
-        * run_of_river_shares.at[c, 'run-of-river share']
+    inflow = inflow_timeseries[c].values \
+        * run_of_river_shares.at[c, 'run-of-river share'] \
+        / installed_capacity
+
+    inflow[inflow > 1] = 1  # assume runoff spillage
 
     if installed_capacity > 1:
         element = {
@@ -261,16 +264,21 @@ for c in countries:
 
     # TODO: check efficiency
     installed_capacity = \
-        hydro_capacities.at[c, ' installed hydro capacities [GW]'] \
+        hydro_capas.at[c, ' installed hydro capacities [GW]'] \
         * (1 - run_of_river_shares.at[c, 'run-of-river share']) * 1e3  # GW -> MW
 
-    inflow = inflow_timeseries.loc[c, :].data \
+    inflow = inflow_timeseries[c].values \
         * (1 - run_of_river_shares.at[c, 'run-of-river share'])
+
+    inflow /= installed_capacity
+
+    # excess runoff
+    inflow[inflow > 1] = 1
 
     if installed_capacity > 1:
         element = {
             'bus': c + '-electricity',
-            'capacity': hydro_capacities.at[c, ' reservoir capacity [TWh]'] * 1e6,  # TWh -> MWh
+            'capacity': hydro_capas.at[c, ' reservoir capacity [TWh]'] * 1e6,  # TWh -> MWh
             'power': installed_capacity,
             'inflow': sequence_name,
             'type': 'reservoir',
@@ -298,7 +306,7 @@ for c in countries:
 
     # TODO: check efficiency
     installed_capacity = \
-        hydro_capacities.at[c, ' installed pumped hydro capacities [GW]'] * 1e3  # GW -> MW
+        hydro_capas.at[c, ' installed pumped hydro capacities [GW]'] * 1e3  # GW -> MW
 
     if installed_capacity > 1:
         element = {
