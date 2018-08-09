@@ -48,7 +48,7 @@ def create_resource(path):
 config = building.get_config()
 countries, year = config['countries'], config['year']
 
-c_data = pd.read_csv('archive/cost.csv', sep=';', index_col=[0, 1, 2])
+c_data = pd.read_csv('archive/literature-values.csv', sep=';', index_col=[0, 1, 2])
 
 country_naming = Package(
         'https://raw.githubusercontent.com/datasets/country-codes/master/datapackage.json').\

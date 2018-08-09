@@ -141,7 +141,7 @@ config = building.get_config()
 countries, year = config['countries'], config['year']
 
 # load archive files
-c_data = pd.read_csv('archive/cost.csv', sep=';', index_col=[0, 1, 2])
+c_data = pd.read_csv('archive/literature-values.csv', sep=';', index_col=[0, 1, 2])
 capas = pd.read_csv('archive/capacities.csv', sep=';', index_col=[0, 1, 2])
 
 # download country-codes datapackage
