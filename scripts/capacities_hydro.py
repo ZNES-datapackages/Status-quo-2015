@@ -73,7 +73,7 @@ def create_elements_resource(path):
             'path': 'https://github.com/datasets/country-codes'
         },
         {
-            'tite': 'Hydro Energy Inflow for Power System Studies',
+            'title': 'Hydro Energy Inflow for Power System Studies',
             'path': 'Alexander Kies, Lueder von Bremen, & Detlev Heinemann. (2017). Hydro Energy Inflow for Power System Studies [Data set]. Zenodo. http://doi.org/10.5281/zenodo.804244'
         },
         {
