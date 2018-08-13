@@ -51,8 +51,9 @@ countries, year = config['countries'], config['year']
 c_data = pd.read_csv('archive/literature-values.csv', sep=';', index_col=[0, 1, 2])
 
 country_naming = Package(
-        'https://raw.githubusercontent.com/datasets/country-codes/master/datapackage.json').\
-        get_resource('country-codes').read(keyed=True)
+    'https://raw.githubusercontent.com/datasets/country-codes/'
+    '5b645f4ea861be1362539d06641e5614353c9895/datapackage.json').\
+    get_resource('country-codes').read(keyed=True)
 
 name_to_isocode = {
     i['official_name_en']: c for c in countries
