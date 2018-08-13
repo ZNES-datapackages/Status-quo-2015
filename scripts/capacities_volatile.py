@@ -62,7 +62,7 @@ for tech, filepath, filename in sources:
     df = pd.read_csv(
         building.download_data(filepath, unzip_file=filename), sep='\t')
 
-    timesteps = df.loc[df['Year'] == 2015, :].index
+    timesteps = df.loc[df['Year'] == int(year), :].index
 
     df.index = pd.to_datetime(df[['Year', 'Month', 'Day', 'Hour']])
     df = df.loc[year, [c for c in countries if c in df.columns]]
