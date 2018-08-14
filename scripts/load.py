@@ -15,12 +15,13 @@ filepath = building.download_data(
 
 raw_data = pd.read_csv(filepath, index_col=[0], parse_dates=True)
 
-suffix = '_load_entsoe_power_statistics'
+suffix = '_load_old'
 
 countries, year = config['countries'], str(config['year'])
 
 columns = [c + suffix for c in countries]
 
+# TODO: Load series misses entries for 2015-12-31 23:00:00
 timeseries = raw_data.loc[year, columns]
 
 demand_total = timeseries.sum()
