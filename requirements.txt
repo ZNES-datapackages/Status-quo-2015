@@ -1,1 +1,1 @@
--e git+git@github.com:znes/datapackage-utilities.git@f73e6fb1ed326b1dfda171fc462d40da5321bef1#egg=datapackage_utilities
+-e git+git@github.com:znes/datapackage-utilities.git@b5721208a13182f8e416734f6a09e49d45c3c4ab#egg=datapackage_utilities
