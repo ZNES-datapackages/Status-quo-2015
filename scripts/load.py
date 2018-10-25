@@ -41,7 +41,7 @@ for c in countries:
     element = {
         'type': 'demand',
         'profile': sequence_name,
-        'type': 'demand',
+        'type': 'load',
         'tech': 'demand',
         'bus': c + '-electricity',
         'amount': demand_total[c + suffix]

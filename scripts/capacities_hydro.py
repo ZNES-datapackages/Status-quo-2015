@@ -242,7 +242,7 @@ for c in countries:
             'marginal_cost': 0,
             'dispatchable': False,
             'profile': sequence_name,
-            'type': 'runofriver',
+            'type': 'generator',
             'tech': 'run-of-river'}
         elements[element_name] = element
         sequences[sequence_name] = inflow
@@ -273,8 +273,8 @@ for c in countries:
     if installed_capacity > 1:
         element = {
             'bus': c + '-electricity',
-            'capacity': hydro_capas.at[c, ' reservoir capacity [TWh]'] * 1e6,  # TWh -> MWh
-            'power': installed_capacity,
+            'storage_capacity': hydro_capas.at[c, ' reservoir capacity [TWh]'] * 1e6,  # TWh -> MWh
+            'capacity': installed_capacity,
             'inflow': sequence_name,
             'efficiency': c_data.loc[year, 'reservoir', 'electrical-efficiency'].value,
             'type': 'reservoir',
@@ -294,7 +294,7 @@ elements = {}
 sequences = pd.DataFrame(index=building.timeindex())
 
 round_trip_eta = c_data.loc[(
-    slice(None), 'pumped-storage', 'electrical-efficiency (round trip)'), :].\
+    year, 'pumped-storage', 'electrical-efficiency (round trip)'), :].\
     value
 
 for c in countries:
@@ -309,11 +309,9 @@ for c in countries:
             'bus': c + '-electricity',
             # TODO: capacity for PHS (2011/2010) better?
             # https://ec.europa.eu/jrc/sites/jrcsh/files/jrc_20130503_assessment_european_phs_potential.pdf
-            'capacity': installed_capacity * 10,
-            'p_max': installed_capacity,
-            'p_min': 0,
-            'charging_efficiency': math.sqrt(round_trip_eta),
-            'discharging_efficiency': math.sqrt(round_trip_eta),
+            'storage_capacity': installed_capacity * 10,
+            'capacity': installed_capacity,
+            'efficiency': round_trip_eta,
             'type': 'storage',
             'tech': 'pumped-storage'}
         elements[element_name] = element
