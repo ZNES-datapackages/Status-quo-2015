@@ -35,3 +35,4 @@ year;technology;parameter;value;unit;source
 2015;nuclear;variable-cost;8.5;EUR / MWh;DIW 2013
 2015;oil;variable-cost;3.0;EUR / MWh;
 2015;waste;variable-cost;3.0;EUR / MWh;
+2015;reservoir;electrical-efficiency;0.90;per unit;DIW 2013

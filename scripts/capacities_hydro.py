@@ -276,6 +276,7 @@ for c in countries:
             'capacity': hydro_capas.at[c, ' reservoir capacity [TWh]'] * 1e6,  # TWh -> MWh
             'power': installed_capacity,
             'inflow': sequence_name,
+            'efficiency': c_data.loc[year, 'reservoir', 'electrical-efficiency'].value,
             'type': 'reservoir',
             'tech': 'reservoir'}
         elements[element_name] = element
