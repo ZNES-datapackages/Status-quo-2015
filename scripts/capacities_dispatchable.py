@@ -113,7 +113,8 @@ for (c, t), capacity in s.iteritems():
         'capacity': capacity,
         'bus': name_to_isocode[c] + '-electricity',
         'marginal_cost': marginal_cost,
-        'type': 'generator',
+        'type': 'dispatchable',
+        'carrier': fuel,
         'tech': t}
 
     elements[element_name] = element

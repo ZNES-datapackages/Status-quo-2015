@@ -124,7 +124,8 @@ for c in countries:
             'capacity': wind_off_capas.loc[c, 'value'],
             'bus': c + '-electricity',
             'profile': 'wind-offshore-' + c + '-profile',
-            'type': 'generator',
+            'type': 'volatile',
+            'carrier': 'wind',
             'tech': 'wind-offshore'}
 
         elements[element_name] = element
@@ -138,7 +139,8 @@ for c in countries:
         'capacity': wind_total,
         'bus': c + '-electricity',
         'profile': 'wind-onshore-' + c + '-profile',
-        'type': 'generator',
+        'carrier': 'wind',
+        'type': 'volatile',
         'tech': 'wind-onshore'}
 
     elements[element_name] = element
@@ -150,8 +152,9 @@ for c in countries:
         'capacity': df.loc['Solar Total Installed Capacity - MW', int(year)],
         'bus': c + '-electricity',
         'profile': 'solar-' + c + '-profile',
-        'type': 'generator',
-        'tech': 'solar'}
+        'type': 'volatile',
+        'tech': 'solar',
+        'carrier': 'solar'}
 
     elements[element_name] = element
 
