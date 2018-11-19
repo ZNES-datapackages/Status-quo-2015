@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 """
+
+Current and Prospective Costs of Electricity Generation until 2050
+https://www.diw.de/documents/publikationen/73/diw_01.c.424566.de/diw_datadoc_2013-068.pdf
+
+powerplantmatching
+https://github.com/FRESNA/powerplantmatching
+Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv
+
+CO2 Emission Factors for Fossil Fuels
+https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2_emission_factors_for_fossil_fuels_correction.pdf'
+
 """
 
 import pandas as pd
@@ -7,65 +18,25 @@ import pandas as pd
 from datapackage_utilities import building
 from datapackage import Package
 
-def create_resource(path):
-
-    from datapackage import Resource
-    resource = Resource({'path': path})
-    resource.infer()
-    resource.descriptor['schema']['primaryKey'] = 'name'
-    resource.descriptor['description'] = 'Installed capacities, costs and technical parameters for dispatchable generators'
-    resource.descriptor['title'] = '{} components'.format(resource.name.title())
-    resource.descriptor['sources'] = [
-        {
-            'title': 'powerplantmatching',
-            'path': 'https://github.com/FRESNA/powerplantmatching',
-            'files': ['Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv']
-        },
-        {
-            'title': 'Current and Prospective Costs of Electricity Generation until 2050',
-            'path': 'https://www.diw.de/documents/publikationen/73/diw_01.c.424566.de/diw_datadoc_2013-068.pdf'
-        },
-        {
-            'title': 'CO2 Emission Factors for Fossil Fuels',
-            'path': 'https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2_emission_factors_for_fossil_fuels_correction.pdf'
-        }]
-
-    resource.descriptor['schema']['foreignKeys'] = [{
-        "fields": "bus",
-        "reference": {
-            "resource": "bus",
-            "fields": "name"}}]
-
-    resource.commit()
-
-    if resource.valid:
-        resource.save('resources/' + resource.name + '.json')
-    else:
-        print('Resource is not valid, writing resource anyway...')
-        resource.save('resources/' + resource.name + '.json')
-
 
 config = building.get_config()
 countries, year = config['countries'], config['year']
 
 c_data = pd.read_csv('archive/literature-values.csv', sep=';', index_col=[0, 1, 2])
 
-country_naming = Package(
-    'https://raw.githubusercontent.com/datasets/country-codes/'
-    '5b645f4ea861be1362539d06641e5614353c9895/datapackage.json').\
-    get_resource('country-codes').read(keyed=True)
 
-name_to_isocode = {
-    i['official_name_en']: c for c in countries
-        for i in country_naming if i['ISO3166-1-Alpha-2'] == c}
-
-# https://github.com/FRESNA/powerplantmatching
-path = building.download_data(
-    'https://media.githubusercontent.com/media/FRESNA/powerplantmatching/6378fd03b1ea461fe9c7a5c9c3801c9acbac52c2/data/out/Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv')
+naming = {'Luxembourg': 'LU', 'Netherlands': 'NL', 'Denmark': 'DK',
+        'Sweden': 'SE', 'Poland': 'PL', 'Czechia': 'CZ', 'Austria': 'AT',
+        'Norway': 'NO', 'Belgium': 'BE', 'France': 'FR', 'Switzerland': 'CH', 'Germany': 'DE'}
 
 
-df = pd.read_csv(path, encoding='utf-8')
-idx = ((df['Country'].isin(name_to_isocode.keys())) & (~df['Fueltype'].isin(['Wind', 'Solar', 'Hydro'])))
+df = pd.read_csv(building.download_data(
+    'https://media.githubusercontent.com/media/FRESNA/powerplantmatching/'
+    '6378fd03b1ea461fe9c7a5c9c3801c9acbac52c2/data/out/'
+    'Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv'),
+    encoding='utf-8')
+
+idx = ((df['Country'].isin(naming.keys())) & (~df['Fueltype'].isin(['Wind', 'Solar', 'Hydro'])))
 df = df.loc[idx, :]
 df['Technology'].fillna('Unknown', inplace=True)
 idx = df[((df['Fueltype'] == 'Natural Gas') & (df['Technology'] == 'Storage Technologies'))].index
@@ -99,7 +70,7 @@ elements = {}
 
 for (c, t), capacity in s.iteritems():
 
-    element_name = t + '-' + name_to_isocode[c]
+    element_name = t + '-' + naming[c]
 
     fuel = 'gas' if 'gas' in t else ('hard_coal' if 'coal' in t else t)
 
@@ -110,15 +81,13 @@ for (c, t), capacity in s.iteritems():
         c_data.loc[(year, t, 'electrical-efficiency'), 'value'])
 
     element = {
-        'capacity': capacity,
-        'bus': name_to_isocode[c] + '-electricity',
-        'marginal_cost': marginal_cost,
-        'type': 'dispatchable',
+        'bus': naming[c] + '-electricity',
+        'tech': t,
         'carrier': fuel,
-        'tech': t}
+        'capacity': capacity,
+        'marginal_cost': marginal_cost,
+        'type': 'dispatchable'}
 
     elements[element_name] = element
 
-path = building.write_elements('dispatchable-generator.csv',
-                        pd.DataFrame.from_dict(elements, orient='index'))
-create_resource(path)
+building.write_elements('dispatchable.csv', pd.DataFrame.from_dict(elements, orient='index'))
