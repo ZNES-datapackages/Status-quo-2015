@@ -1,41 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-This script constructs a pandas.Series `hubs` with hub-names as index and
-polygons of these hubs as values. It uses the NUTS shapefile.
+NUTS Shapefiles
+http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_10M_SH.zip
 """
 
 import pandas as pd
 
 from datapackage_utilities import building, geometry
-
-def create_resource(path):
-    """
-    """
-    from datapackage import Resource
-    resource = Resource({'path': path})
-    resource.infer()
-    resource.descriptor['schema']['primaryKey'] = 'name'
-    resource.descriptor['description'] = 'Contains the hubs (nodes) for the energy system representation'
-    resource.descriptor['title'] = 'Energy system hubs for DE and its electrical neighbours'
-    resource.descriptor['sources'] = [{
-        'title': 'NUTS Shapefiles',
-        'path': 'http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_10M_SH.zip',
-        'files': ['NUTS_2013_10M_SH/data/NUTS_RG_10M_2013.shp',
-                  'NUTS_2013_10M_SH/data/NUTS_RG_10M_2013.dbf']}]
-
-    if 'geometries' in path:
-
-        resource.descriptor['schema']['foreignKeys'] =   [{
-            "fields": "bus",
-            "reference": {
-                "resource": "bus",
-                "fields": "name"}}]
-
-    resource.commit()
-    resource.descriptor
-
-    if resource.valid:
-        resource.save('resources/' + resource.name + '.json')
 
 config = building.get_config()
 
@@ -64,9 +35,5 @@ hub_elements.loc[:, 'type'] = 'bus'
 hub_elements.loc[:, 'balanced'] = True
 hub_elements.loc[:, 'geometry'] = hubs.index
 
-path = building.write_geometries('buses.csv', hubs)
-
-create_resource(path)
-
-path = building.write_elements('bus.csv', hub_elements)
-create_resource(path)
+building.write_geometries('buses.csv', hubs)
+building.write_elements('bus.csv', hub_elements)
