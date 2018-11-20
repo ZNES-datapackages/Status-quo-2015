@@ -41,7 +41,7 @@ for url, fname, tech in zip(urls, filenames, technologies):
     renames = {c: tech + '-' + c + '-profile' for c in countries}
     df.rename(columns=renames, inplace=True)
 
-    building.write_sequences('volatile-profiles.csv', df)
+    building.write_sequences('volatile_profile.csv', df)
 
 df = pd.read_csv(
         building.download_data(
@@ -54,4 +54,4 @@ df.index = pd.date_range(
 
 renames = {c: 'solar-' + c + '-profile' for c in countries}
 df.rename(columns=renames, inplace=True)
-building.write_sequences('volatile-profiles.csv', df)
+building.write_sequences('volatile_profile.csv', df)

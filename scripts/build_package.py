@@ -16,10 +16,18 @@ import hubs
 import dispatchable
 import volatile
 import volatile_profiles
-#import capacities_hydro
+#import hydro
 import load
 import grid
 import excess
 import shortage
 
-import update_metadata
+building.infer_metadata(package_name='Status quo 2015',
+                        foreign_keys={
+                            'bus': ['volatile', 'dispatchable',
+                                    'load', 'excess', 'shortage'],
+                            'profile': ['load', 'volatile'],
+                            'from_to_bus': ['grid'],
+                            'chp': []
+                            }
+                        )

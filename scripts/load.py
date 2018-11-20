@@ -61,4 +61,4 @@ building.write_elements('load.csv',
         pd.DataFrame.from_dict(elements, orient='index'))
 
 sequences_df.index = building.timeindex()
-building.write_sequences('load-profiles.csv', sequences_df)
+building.write_sequences('load_profile.csv', sequences_df)
