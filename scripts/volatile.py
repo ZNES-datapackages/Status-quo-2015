@@ -70,7 +70,7 @@ for country in countries:
 
     element = {
         'bus': country + '-electricity',
-        'tech': 'photovoltaic',
+        'tech': 'pv',
         'carrier': 'solar',
         'capacity': df.loc['Solar Total Installed Capacity - MW', int(year)],
         'profile': 'solar-' + country + '-profile',
