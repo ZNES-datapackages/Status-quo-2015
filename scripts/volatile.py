@@ -36,14 +36,14 @@ for country in countries:
     # wind-offshore
     if country in offshore_capacities.index:
 
-        element_name = 'wind-offshore-' + country
+        element_name = country + '-wind-offshore'
 
         element = {
             'bus': country + '-electricity',
             'tech': 'wind-offshore',
             'carrier': 'wind',
             'capacity': offshore_capacities.loc[country, 'value'],
-            'profile': 'wind-offshore-' + country + '-profile',
+            'profile': country + '-wind-offshore-profile',
             'marginal_cost': 0,
             'type': 'volatile'}
 
@@ -52,28 +52,28 @@ for country in countries:
         wind_capacity -= offshore_capacities.loc[country, 'value']
 
     # wind-onshore
-    element_name = 'wind-onshore-' + country
+    element_name = country + '-wind-onshore'
 
     element = {
         'bus': country + '-electricity',
         'tech': 'wind-onshore',
         'carrier': 'wind',
         'capacity': wind_capacity,
-        'profile': 'wind-onshore-' + country + '-profile',
+        'profile': country + '-wind-onshore-profile',
         'marginal_cost': 0,
         'type': 'volatile'}
 
     elements[element_name] = element
 
     # solar
-    element_name = 'solar-' + country
+    element_name = country + '-pv'
 
     element = {
         'bus': country + '-electricity',
         'tech': 'pv',
         'carrier': 'solar',
         'capacity': df.loc['Solar Total Installed Capacity - MW', int(year)],
-        'profile': 'solar-' + country + '-profile',
+        'profile': country + '-pv-profile',
         'marginal_cost': 0,
         'type': 'volatile'}
 

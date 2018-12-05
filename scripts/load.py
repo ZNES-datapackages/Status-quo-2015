@@ -5,13 +5,8 @@ Open Power System Data. 2017. Data Package Time series. Version 2017-07-09. http
 https://data.open-power-system-data.org/time_series/2017-07-09/time_series_60min_singleindex.csv
 https://data.open-power-system-data.org/time_series/2017-07-09/time_series_60min_singleindex.csv
 
-ToDo
-----
-
-Load series misses entries for 2015-12-31 23:00:00
 """
 
-import json
 import pandas as pd
 
 from datapackage_utilities import building
@@ -39,13 +34,13 @@ load_profile = timeseries / load_total
 
 elements = {}
 
-sequences_df = pd.DataFrame(index=load_profile.index)
+sequences = pd.DataFrame(index=load_profile.index)
 
 for c in countries:
-    element_name = 'electricity-load-' + c
+    element_name = c + '-load'
     sequence_name = element_name +  '-profile'
 
-    sequences_df[sequence_name] = load_profile[c + suffix].values
+    sequences[sequence_name] = load_profile[c + suffix].values
 
     element = {
         'bus': c + '-electricity',
@@ -57,8 +52,11 @@ for c in countries:
 
     elements[element_name] = element
 
+# replace missing last hour with previous
+sequences.loc['2015-12-31 23:00:00', :] = sequences.loc['2015-12-31 22:00:00', :]
+
 building.write_elements('load.csv',
         pd.DataFrame.from_dict(elements, orient='index'))
 
-sequences_df.index = building.timeindex()
-building.write_sequences('load_profile.csv', sequences_df)
+sequences.index = building.timeindex()
+building.write_sequences('load_profile.csv', sequences)

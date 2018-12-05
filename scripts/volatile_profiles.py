@@ -38,7 +38,7 @@ for url, fname, tech in zip(urls, filenames, technologies):
             parse_dates={'i': date_columns}, date_parser=date_parser,
             index_col='i').reindex(columns=countries).dropna(axis=1).loc[year, :]
 
-    renames = {c: tech + '-' + c + '-profile' for c in countries}
+    renames = {c: c + '-' + tech + '-profile' for c in countries}
     df.rename(columns=renames, inplace=True)
 
     building.write_sequences('volatile_profile.csv', df)
@@ -52,6 +52,6 @@ df = pd.read_csv(
 df.index = pd.date_range(
     '2015-01-01 00:00:00', '2015-12-31 23:00:00', freq='H')
 
-renames = {c: 'solar-' + c + '-profile' for c in countries}
+renames = {c: c + '-pv-profile' for c in countries}
 df.rename(columns=renames, inplace=True)
 building.write_sequences('volatile_profile.csv', df)

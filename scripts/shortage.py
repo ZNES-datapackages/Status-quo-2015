@@ -13,7 +13,7 @@ buses.index.name = 'bus'
 elements = pd.DataFrame(buses.index)
 
 elements['type'] = 'shortage'
-elements['name'] = 'shortage-' + elements['bus'].str[:2]
+elements['name'] = elements['bus'].str[:2] + '-shortage'
 elements['capacity'] = 50000
 elements['marginal_cost'] = 1000
 
