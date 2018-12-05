@@ -86,14 +86,14 @@ s = df.groupby(['Country', 'carrier', 'tech'])['Capacity'].sum()
 
 elements = {}
 
-co2 = carriers.loc[(year, 'co2', 'cost'), 'value']
+co2 = carriers.at[(year, 'co2', 'cost'), 'value']
 
 for (country, carrier, tech), capacity in s.iteritems():
+    name = country + '-' + carrier + '-' + tech
 
-    element_name = country + '-' + carrier + '-' + tech
-    vom = technologies.loc[(year, carrier, tech, 'vom'), 'value']
-    eta = technologies.loc[(year, carrier, tech, 'efficiency'), 'value']
-    ef = carriers.loc[(year, carrier, 'emission-factor'), 'value']
+    vom = technologies.at[(year, carrier, tech, 'vom'), 'value']
+    eta = technologies.at[(year, carrier, tech, 'efficiency'), 'value']
+    ef = carriers.at[(year, carrier, 'emission-factor'), 'value']
 
     marginal_cost = (vom + co2 * ef) / eta
 
@@ -105,6 +105,7 @@ for (country, carrier, tech), capacity in s.iteritems():
         'marginal_cost': marginal_cost,
         'type': 'dispatchable'}
 
-    elements[element_name] = element
+    elements[name] = element
+
 
 building.write_elements('dispatchable.csv', pd.DataFrame.from_dict(elements, orient='index'))
