@@ -1,6 +1,5 @@
 """
 """
-
 import pandas as pd
 
 from datapackage_utilities import building
@@ -11,7 +10,7 @@ buses.index.name = 'bus'
 elements = pd.DataFrame(buses.index)
 
 elements['type'] = 'excess'
-elements['name'] = 'excess-' + elements['bus'].str[:2]
+elements['name'] = elements['bus'].str[:2] + '-excess'
 elements['marginal_cost'] = 0
 
 elements.set_index('name', inplace=True)

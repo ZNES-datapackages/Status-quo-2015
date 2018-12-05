@@ -8,6 +8,8 @@ import pandas as pd
 
 from datapackage_utilities import building
 
+from itertools import combinations
+
 config = building.get_config()
 countries = config['countries']
 
@@ -16,6 +18,8 @@ loss = 0.03
 filepath = building.input_filepath('transmission.csv')
 
 data = pd.read_csv(filepath, skiprows=3, sep=';', index_col=['from', 'to'])
+
+data = data.reindex(list(combinations(countries, 2))).dropna()
 
 elements = {}
 for (x, y), (value, _) in data.iterrows():
@@ -27,7 +31,8 @@ for (x, y), (value, _) in data.iterrows():
         'loss': loss,
         'to_bus': to_bus,
         'from_bus': from_bus,
-        'capacity': value
+        'capacity': value,
+        'tech': 'transshipment'
     }
 
     elements[from_bus + '-' + to_bus] = element
