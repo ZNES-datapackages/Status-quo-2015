@@ -1,4 +1,5 @@
-"""
+""" Creating elements and sequences for hydro generation facilities reservoir,
+runofriver and pumped-hydro-storage.
 """
 
 import os
@@ -7,8 +8,6 @@ import pandas as pd
 
 from datapackage import Package
 from datapackage_utilities import building
-
-from oemof.tools.economics import annuity
 
 def get_hydro_inflow(inflow_dir=None):
     """ Adapted from https://github.com/FRESNA/vresutils/blob/master/vresutils/hydro.py
@@ -38,7 +37,7 @@ def get_hydro_inflow(inflow_dir=None):
 
 
 config = building.get_config()
-countries, year = config['regions'], config['year']
+countries, year = config['countries'], config['year']
 
 inflows = (get_hydro_inflow(building.download_data(
         'https://zenodo.org/record/804244/files/Hydro_Inflow.zip?download=1',
@@ -63,11 +62,14 @@ capacities = pd.read_csv(building.download_data(
 
 capacities.loc['CH'] = [8.8, 12, 1.9]  # add CH elsewhere
 
+# https://zenodo.org/record/804244 data handling
 capacities['hyd_wo_phs'] = (capacities[' installed hydro capacities [GW]'] - capacities[' installed pumped hydro capacities [GW]']) * 1000 # MW
+capacities['phs_power'] = capacities[' installed pumped hydro capacities [GW]'] * 1000 # MWh
 capacities['ror_power'] = capacities['hyd_wo_phs'] * ror_shares
 capacities['rsv_power'] = capacities['hyd_wo_phs'] * (1 - ror_shares)
 capacities['rsv_capacity'] = capacities[' reservoir capacity [TWh]'] * 1e6 # MWh
 
+# ror
 elements = {}
 for country in countries:
     name = country + '-ror'
@@ -78,69 +80,82 @@ for country in countries:
 
     if capacity > 0:
 
-        elements[name] = {'type': 'volatile',
-        'tech': 'ror',
-        'carrier': 'hydro',
-        'bus': country + '-electricity',
-        'capacity': capacity,
-        'profile': country + '-ror-profile',
-        'efficiency': eta
-        }
+        elements[name] = {
+            'type': 'volatile',
+            'tech': 'ror',
+            'carrier': 'hydro',
+            'bus': country + '-electricity',
+            'capacity': capacity,
+            'profile': country + '-ror-profile',
+            'efficiency': eta
+            }
 
+building.write_elements(
+    'ror.csv', pd.DataFrame.from_dict(elements, orient='index'))
 
 sequences = (inflows * ror_shares * 1000) / capacities['ror_power']
+sequences = sequences[countries].copy()
+sequences.dropna(axis=1, inplace=True)
 sequences.columns = sequences.columns.astype(str) + '-ror-profile'
+
+
 building.write_sequences(
     'ror_profile.csv', sequences.set_index(building.timeindex()))
 
+# reservoir
+elements = {}
 for country in countries:
-    name = country + 'reservoir'
+    name = country + '-reservoir'
+
+    capacity = capacities.loc[country, 'rsv_power']
+
+    eta = technologies.loc[(year, 'hydro', 'reservoir', 'efficiency'), 'value']
+
+    if capacity > 0:
+
+        elements[name] = {
+            'type': 'reservoir',
+            'tech': 'reservoir',
+            'carrier': 'hydro',
+            'bus': country + '-electricity',
+            'capacity': capacity,
+            'storage_capacity': capacities.loc[country, 'rsv_capacity'],
+            'profile': country + '-reservoir-profile',
+            'efficiency': eta
+            }
+
+building.write_elements(
+    'reservoir.csv', pd.DataFrame.from_dict(elements, orient='index'))
+
+sequences = inflows * (1 - ror_shares) * 1000
+sequences = sequences[countries].copy()
+sequences.dropna(axis=1, inplace=True)
+sequences.columns = sequences.columns.astype(str) + '-reservoir-profile'
+building.write_sequences(
+    'reservoir_profile.csv', sequences.set_index(building.timeindex()))
 
 # phs
-phs = pd.DataFrame(index=countries)
-phs['type'], phs['tech'], phs['bus'], phs['loss'], phs['capacity'] = \
-    'storage', \
-    'phs', \
-    phs.index.astype(str) + '-electricity', \
-    0, \
-    capacities.loc[phs.index, ' installed pumped hydro capacities [GW]'] * 1000
+elements = {}
+for country in countries:
+    name = country + '-phs'
 
-phs['storage_capacity'] = phs['capacity'] * 6  # Brown et al.
-# as efficieny in data is roundtrip use sqrt of roundtrip
-phs['efficiency'] = float(technologies['phs']['efficiency'])**0.5
-phs = phs.assign(**technologies['phs'])[phs['capacity'] > 0].dropna()
+    capacity = capacities.loc[country, 'phs_power']
 
+    eta = technologies.loc[(year, 'hydro', 'phs', 'efficiency'), 'value']
 
-# other hydro / reservoir
-rsv = pd.DataFrame(index=countries)
-rsv['type'], rsv['tech'], rsv['bus'], rsv['loss'], rsv['capacity'], rsv['storage_capacity'] = \
-    'reservoir', \
-    'reservoir', \
-    rsv.index.astype(str) + '-electricity', \
-    0, \
-    (capacities.loc[ror.index, ' installed hydro capacities [GW]'] -
-    capacities.loc[ror.index, ' installed pumped hydro capacities [GW]']) * (1 - ror_shares[ror.index]) * 1000, \
-    capacities.loc[rsv.index, ' reservoir capacity [TWh]'] * 1e6  # to MWh
+    if capacity > 0:
 
-rsv = rsv.assign(**technologies['reservoir'])[rsv['capacity'] > 0].dropna()
-rsv['profile'] = rsv['tech'] + '-' + rsv['bus'] + '-profile'
+        elements[name] = {
+            'type': 'storage',
+            'tech': 'phs',
+            'carrier': 'hydro',
+            'bus': country + '-electricity',
+            'capacity': capacity,
+            'loss': 0,
+            'storage_capacity': capacity * 6, # max hours # Brown et al.
+            'storage_capacity_inital': 0.5,
+            'efficiency': eta
+            }
 
-rsv_sequences = inflows[rsv.index] * (1 - ror_shares[rsv.index]) * 1000 # GWh -> MWh
-rsv_sequences.columns = rsv_sequences.columns.map(rsv['profile'])
-
-# write sequences to different files for better automatic foreignKey handling
-# in meta data
-building.write_sequences(
-    'reservoir_profile.csv', rsv_sequences.set_index(building.timeindex()))
-building.write_sequences(
-    'ror_profile.csv', ror_sequences.set_index(building.timeindex()))
-
-filenames = ['ror.csv', 'phs.csv', 'reservoir.csv']
-
-for fn, df in zip(filenames, [ror, phs, rsv]):
-    df.index = df.index.astype(str) + '_' + df['tech']
-    df['capacity_cost'] = df.apply(
-        lambda x: annuity(float(x['capacity_cost']) * 1000,
-                      float(x['lifetime']),
-                      config['wacc']), axis=1)
-    building.write_elements(fn, df)
+building.write_elements(
+    'phs.csv', pd.DataFrame.from_dict(elements, orient='index'))
