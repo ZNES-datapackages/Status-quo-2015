@@ -9,6 +9,8 @@
       "type"
     ]
   },
+  "name": "results-aggregated",
+  "temporal-resolution":3,
   "directories": {
     "elements": "data/elements",
     "sequences": "data/sequences",

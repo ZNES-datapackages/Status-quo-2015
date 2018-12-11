@@ -35,5 +35,5 @@ hub_elements.loc[:, 'type'] = 'bus'
 hub_elements.loc[:, 'balanced'] = True
 hub_elements.loc[:, 'geometry'] = hubs.index
 
-building.write_geometries('buses.csv', hubs)
+building.write_geometries('bus.geojson', hubs)
 building.write_elements('bus.csv', hub_elements)

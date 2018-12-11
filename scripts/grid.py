@@ -27,7 +27,7 @@ for (x, y), (value, _) in data.iterrows():
     from_bus, to_bus = x + '-electricity', y + '-electricity'
 
     element = {
-        'type': 'connection',
+        'type': 'link',
         'loss': loss,
         'to_bus': to_bus,
         'from_bus': from_bus,
