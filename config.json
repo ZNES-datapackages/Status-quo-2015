@@ -9,7 +9,7 @@
       "type"
     ]
   },
-  "name": "results-aggregated",
+  "name": "results",
   "temporal-resolution":3,
   "directories": {
     "elements": "data/elements",

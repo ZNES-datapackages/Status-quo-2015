@@ -23,14 +23,16 @@ config = building.get_config()
 countries, year = config['countries'], config['year']
 
 technologies = pd.DataFrame(
-    Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
+    Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
+    #Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('electricity').read(keyed=True)).set_index(
         ['year', 'carrier', 'tech', 'parameter'])
 
 carriers = pd.DataFrame(
-    Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
+    Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
+    #Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('carrier').read(keyed=True)).set_index(
-        ['year', 'carrier', 'parameter']).sort_index()
+        ['year', 'carrier', 'parameter', 'unit']).sort_index()
 
 isocodes = dict(pd.DataFrame(
     Package('https://raw.githubusercontent.com/datasets/country-codes/master/datapackage.json')
@@ -60,8 +62,8 @@ idx = df[((df['Fueltype'] == 'Natural Gas') & (df['Technology'] == 'Storage Tech
 df.drop(idx, inplace=True)
 
 # Other
-mapper = {('Bioenergy', 'Steam Turbine'): ('bio', 'biomass'),
-          ('Bioenergy', 'Unknown'): ('bio', 'biomass'),
+mapper = {('Bioenergy', 'Steam Turbine'): ('biomass', 'biomass'),
+          ('Bioenergy', 'Unknown'): ('biomass', 'biomass'),
           ('Hard Coal', 'CCGT'): ('coal', 'ccgt'),
           ('Hard Coal', 'Steam Turbine'): ('coal', 'st'),
           ('Hard Coal', 'Unknown'): ('coal', 'st'),
@@ -86,23 +88,24 @@ s = df.groupby(['Country', 'carrier', 'tech'])['Capacity'].sum()
 
 elements = {}
 
-co2 = carriers.at[(year, 'co2', 'cost'), 'value']
+co2 = carriers.at[(year, 'co2', 'cost', 'EUR/t'), 'value']
 
 for (country, carrier, tech), capacity in s.iteritems():
     name = country + '-' + carrier + '-' + tech
 
     vom = technologies.at[(year, carrier, tech, 'vom'), 'value']
     eta = technologies.at[(year, carrier, tech, 'efficiency'), 'value']
-    ef = carriers.at[(year, carrier, 'emission-factor'), 'value']
+    ef = carriers.at[(year, carrier, 'emission-factor', 't (CO2)/MWh'), 'value']
+    fuel = carriers.at[(year, carrier, 'cost', 'EUR/MWh'), 'value']
 
-    marginal_cost = (vom + co2 * ef) / eta
+    marginal_cost = (fuel + vom + co2 * ef) / eta
 
     element = {
         'bus': country + '-electricity',
         'tech': tech,
         'carrier': carrier,
         'capacity': capacity,
-        'marginal_cost': marginal_cost,
+        'marginal_cost': float(marginal_cost),
         'type': 'dispatchable'}
 
     elements[name] = element
