@@ -1,1 +1,1 @@
--e git+git@github.com:znes/datapackage-utilities.git@b5721208a13182f8e416734f6a09e49d45c3c4ab#egg=datapackage_utilities
+-e git+git@github.com:oemof/oemof-tabular.git@master#egg=oemof_tabular

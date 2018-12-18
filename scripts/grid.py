@@ -6,7 +6,7 @@ https://www.entsoe.eu/fileadmin/user_upload/_library/ntc/archive/NTC-Values-Wint
 
 import pandas as pd
 
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 
 from itertools import combinations
 

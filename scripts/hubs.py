@@ -6,7 +6,8 @@ http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_10M_SH.zip
 
 import pandas as pd
 
-from datapackage_utilities import building, geometry
+from oemof.tabular.datapackage import building
+from oemof.tabular.tools import geometry
 
 config = building.get_config()
 

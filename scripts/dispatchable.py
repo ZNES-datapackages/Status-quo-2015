@@ -15,7 +15,7 @@ https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2
 
 import pandas as pd
 
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 from datapackage import Package
 
 

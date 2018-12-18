@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 
 config = building.get_config()
 

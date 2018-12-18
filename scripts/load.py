@@ -9,7 +9,7 @@ https://data.open-power-system-data.org/time_series/2017-07-09/time_series_60min
 
 import pandas as pd
 
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 
 
 config = building.get_config()

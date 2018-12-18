@@ -7,7 +7,7 @@ import os
 import pandas as pd
 
 from datapackage import Package
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 
 def get_hydro_inflow(inflow_dir=None):
     """ Adapted from https://github.com/FRESNA/vresutils/blob/master/vresutils/hydro.py
