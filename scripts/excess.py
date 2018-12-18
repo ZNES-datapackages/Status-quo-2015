@@ -2,7 +2,7 @@
 """
 import pandas as pd
 
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 
 buses = building.read_elements('bus.csv')
 buses.index.name = 'bus'

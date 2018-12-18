@@ -5,7 +5,7 @@ EU Commission, DG ENER, Unit A4 - ENERGY STATISTICS, https://ec.europa.eu/energy
 
 import pandas as pd
 
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 
 config = building.get_config()
 countries, year = config['countries'], str(config['year'])

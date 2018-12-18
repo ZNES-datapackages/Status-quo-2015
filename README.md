@@ -8,7 +8,7 @@ If you want to build the package all you need to do is to run one script.
 
 To run the script, make sure the requirements e.g. via pip
 
-    pip install -U -r requirements.txt
+    pip install --process-dependency-links -U -r requirements.txt
 
 
 ### Build

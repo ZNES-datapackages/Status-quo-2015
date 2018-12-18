@@ -2,7 +2,7 @@
 """
 """
 
-from datapackage_utilities import building, processing
+from oemof.tabular.datapackage import building, processing
 
 processing.clean_datapackage(directories=['data', 'ressources', 'results'])
 
@@ -10,7 +10,7 @@ processing.clean_datapackage(directories=['data', 'ressources', 'results'])
 config = building.get_config()
 
 # initialize directories etc. based on config file
-building.initialize_dpkg()
+building.initialize_datapackage()
 
 import hubs
 import dispatchable

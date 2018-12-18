@@ -17,7 +17,7 @@ https://www.sciencedirect.com/science/article/pii/S0960148118303677
 
 import pandas as pd
 
-from datapackage_utilities import building
+from oemof.tabular.datapackage import building
 from datetime import datetime
 
 
