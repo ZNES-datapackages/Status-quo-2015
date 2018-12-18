@@ -1,6 +1,6 @@
 {
   "name": "sq_2015",
-  "temporal-resolution": 3,
+  "temporal-resolution": 1,
   "directories": {
     "elements": "data/elements",
     "sequences": "data/sequences",

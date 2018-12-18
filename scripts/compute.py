@@ -18,6 +18,8 @@ import oemof.outputlib as outlib
 from renpass import options, cli
 from renpass import postprocessing as pp
 
+from renpass.facades import Shortage
+
 config = building.get_config()
 
 temporal_resolution = config['temporal-resolution']
@@ -57,7 +59,6 @@ es = EnergySystem.from_datapackage(
     path + 'datapackage.json',
     attributemap={},
     typemap=options.typemap)
-es.add(system)
 time['energysystem'] = cli.stopwatch()
 
 m = Model(es)
@@ -90,9 +91,9 @@ def save(df, name, how='csv', writer=None):
 buses = [b.label for b in es.nodes if isinstance(b, Bus)]
 
 # oemof default results
-# link_results = pp.component_results(es, results).get('link')
-# if link_results is not None:
-#     save(link_results, 'links-oemof')
+link_results = pp.component_results(es, results).get('link')
+if link_results is not None:
+    save(link_results, 'links-oemof')
 
 imports = pd.DataFrame()
 for b in buses:
@@ -113,27 +114,27 @@ for b in buses:
     save(imports, 'imports')
 
 
-all = pp.bus_results(es, results, select='scalars', aggregate=True)
-all.name = 'value'
-endogenous = all.reset_index()
-endogenous['tech'] = [
-    getattr(t, 'tech', np.nan) for t in all.index.get_level_values(0)]
+#all = pp.bus_results(es, results, select='scalars', aggregate=True)
+#all.name = 'value'
+#endogenous = all.reset_index()
+#endogenous['tech'] = [
+#    getattr(t, 'tech', np.nan) for t in all.index.get_level_values(0)]
 
 
 d = dict()
 for node in es.nodes:
-    if not isinstance(node, (Bus, Sink)):
+    if not isinstance(node, (Bus, Sink, Shortage)):
         if getattr(node, 'capacity', None) is not None:
             if isinstance(node, options.typemap['link']):
                 pass #key = (node.input, node.output, 'capacity', node.tech) # for oemof logic
             else:
-                key = (node, [n for n in node.outputs.keys()][0], 'capacity', node.tech) # for oemof logic
+                key = (node, [n for n in node.outputs.keys()][0], 'capacity', node.tech + node.carrier) # for oemof logic
                 d[key] = {'value': node.capacity}
 exogenous = pd.DataFrame.from_dict(d, orient='index').dropna()
 exogenous.index = exogenous.index.set_names(['from', 'to', 'type', 'tech'])
 
 capacities = pd.concat(
-    [endogenous, exogenous.reset_index()]).groupby(['to', 'tech']).sum().unstack('to')
+    [pd.DataFrame(), exogenous.reset_index()]).groupby(['to', 'tech']).sum().unstack('to')
 capacities.columns = capacities.columns.droplevel(0)
 save(capacities, 'capacities')
 
@@ -168,17 +169,18 @@ with open(os.path.join(results_path, 'modelstats.json'), 'w') as outfile:
 
 # summary ----------------------------------------------------------------------
 if True:
+    #import pudb; pudb.set_trace()
     supply_sum = pp.supply_results(
         results=results, es=es, bus=buses, types=[
             'dispatchable', 'volatile', 'conversion', 'backpressure', 'extraction',
             'reservoir']).sum().reset_index() #.apply(lambda x: x[x > 0].sum())
-    supply_sum['from'] = supply_sum.apply(lambda x: x['from'].label.split('-')[1], axis=1)
+    supply_sum['from'] = supply_sum.apply(lambda x: '-'.join(x['from'].label.split('-')[1:]), axis=1)
     supply_sum.drop('type', axis=1, inplace=True)
     supply_sum = (supply_sum.set_index(['from', 'to']).unstack('from') /
-                  1e6 * config['temporal_resolution'])
+                  1e6 * config['temporal-resolution'])
     supply_sum.columns  = supply_sum.columns.droplevel(0)
 
-    excess_share = (excess.sum() * config['temporal_resolution'] / 1e6) / supply_sum.sum(axis=1)
+    excess_share = (excess.sum() * config['temporal-resolution'] / 1e6) / supply_sum.sum(axis=1)
     excess_share.name = 'excess'
 
     summary = pd.concat([supply_sum, excess_share], axis=1)

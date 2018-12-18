@@ -13,6 +13,8 @@ https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2
 
 """
 
+import json
+
 import pandas as pd
 
 from datapackage_utilities import building
@@ -23,14 +25,12 @@ config = building.get_config()
 countries, year = config['countries'], config['year']
 
 technologies = pd.DataFrame(
-    Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
-    #Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
+    Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('electricity').read(keyed=True)).set_index(
         ['year', 'carrier', 'tech', 'parameter'])
 
 carriers = pd.DataFrame(
-    Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
-    #Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
+    Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('carrier').read(keyed=True)).set_index(
         ['year', 'carrier', 'parameter', 'unit']).sort_index()
 
@@ -43,35 +43,36 @@ isocodes['CZ'] = 'Czech Republic'
 isocodes['GB'] = 'United Kingdom'
 
 df = pd.read_csv(building.download_data(
-    'https://media.githubusercontent.com/media/FRESNA/powerplantmatching/'
-    '6378fd03b1ea461fe9c7a5c9c3801c9acbac52c2/data/out/'
-    'Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv'),
+    'https://media.githubusercontent.com/media/FRESNA/powerplantmatching/master/data/out/default/powerplants.csv'),
     encoding='utf-8')
 
 df['Country'] = df['Country'].map({y:x for x, y in isocodes.items()})
 
+cond1 = df['Fueltype'].isin(['Wind', 'Solar', 'Hydro', 'Geothermal'])
+cond2 = (df['Fueltype'] == 'Natural Gas') & df['Technology'].isin(['Pv', 'Storage Technologies', 'Caes'])
+cond3 = (df['Fueltype'] == 'Other') & (df['Technology'] == 'Storage Technologies')
+cond4 = (df['Fueltype'] == 'Bioenergy') & (df['Technology'] == 'Pv')
+cond5 = df['Country'].isin(countries)
 
-idx = ((df['Country'].isin(countries)) & (~df['Fueltype'].isin(['Wind', 'Solar', 'Hydro'])))
-
-df = df.loc[idx, :].copy()
+df = df.loc[~cond1 & ~cond2 & ~cond3 & ~cond4 & cond5, :].copy()
 
 df.fillna({'Technology': 'Unknown'}, inplace=True)
-
-idx = df[((df['Fueltype'] == 'Natural Gas') & (df['Technology'] == 'Storage Technologies'))].index
-
-df.drop(idx, inplace=True)
 
 # Other
 mapper = {('Bioenergy', 'Steam Turbine'): ('biomass', 'biomass'),
           ('Bioenergy', 'Unknown'): ('biomass', 'biomass'),
+          ('Bioenergy', 'CCGT'): ('biomass', 'biomass'),
           ('Hard Coal', 'CCGT'): ('coal', 'ccgt'),
           ('Hard Coal', 'Steam Turbine'): ('coal', 'st'),
           ('Hard Coal', 'Unknown'): ('coal', 'st'),
           ('Lignite', 'Steam Turbine'): ('lignite', 'boa'),
+          ('Lignite', 'Unknown'): ('lignite', 'boa'),
           ('Natural Gas', 'CCGT'): ('gas', 'ccgt'),
+          ('Natural Gas', 'CCGT, Thermal'): ('gas', 'ccgt'),
           ('Natural Gas', 'OCGT'): ('gas', 'ocgt'),
           ('Natural Gas', 'Steam Turbine'): ('gas', 'st'),
           ('Natural Gas', 'Unknown'): ('gas', 'ccgt'),
+          ('Other', 'CCGT'): ('gas', 'ccgt'),
           ('Nuclear', 'Unknown'): ('uranium', 'st'),
           ('Nuclear', 'Steam Turbine'): ('uranium', 'st'),
           ('Oil', 'CCGT'): ('oil', 'st'),
@@ -79,7 +80,10 @@ mapper = {('Bioenergy', 'Steam Turbine'): ('biomass', 'biomass'),
           ('Oil', 'Steam Turbine'): ('oil', 'st'),
           ('Oil', 'Unknown'): ('oil', 'st'),
           ('Other', 'Unknown'): ('waste', 'chp'),
-          ('Waste', 'Steam Turbine'): ('waste', 'chp')}
+          ('Other', 'Steam Turbine'): ('waste', 'chp'),
+          ('Waste', 'Steam Turbine'): ('waste', 'chp'),
+          ('Waste', 'CCGT'): ('waste', 'chp'),
+          ('Waste', 'Unknown'): ('waste', 'chp')}
 
 
 df['carrier'], df['tech'] = zip(*[mapper[tuple(i)] for i in df[['Fueltype', 'Technology']].values])
@@ -100,15 +104,19 @@ for (country, carrier, tech), capacity in s.iteritems():
 
     marginal_cost = (fuel + vom + co2 * ef) / eta
 
+    output_parameters = {'summed_min': 7000 if country == 'DE' and carrier == 'biomass' else 0}
+
     element = {
         'bus': country + '-electricity',
         'tech': tech,
         'carrier': carrier,
         'capacity': capacity,
         'marginal_cost': float(marginal_cost),
+        'edge_parameters': json.dumps(output_parameters),
         'type': 'dispatchable'}
 
     elements[name] = element
 
+elements['DE-biomass-biomass']['capacity'] = 7170  # https://www.energy-charts.de/power_inst_de.htm
 
 building.write_elements('dispatchable.csv', pd.DataFrame.from_dict(elements, orient='index'))
