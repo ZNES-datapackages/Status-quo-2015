@@ -152,7 +152,8 @@ for country in countries:
             'bus': country + '-electricity',
             'capacity': capacity,
             'loss': 0,
-            'storage_capacity': capacity * 6, # max hours # Brown et al.
+            'marginal_cost': 0.0000001,
+            'storage_capacity': capacity * 6,  # max hours # Brown et al.
             'storage_capacity_inital': 0.5,
             'efficiency': eta
             }
