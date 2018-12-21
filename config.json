@@ -1,16 +1,6 @@
 {
-  "headers": {
-    "elements": [
-      "name",
-      "node_parameters",
-      "predecessors",
-      "successors",
-      "edge_parameters",
-      "type"
-    ]
-  },
-  "name": "results",
-  "temporal-resolution":3,
+  "name": "sq_2015",
+  "temporal-resolution": 1,
   "directories": {
     "elements": "data/elements",
     "sequences": "data/sequences",
