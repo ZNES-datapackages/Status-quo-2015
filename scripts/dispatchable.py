@@ -16,13 +16,21 @@ https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2
 import json
 
 import pandas as pd
+import numpy as np
 
 from oemof.tabular.datapackage import building
 from datapackage import Package
+from ast import literal_eval
 
+
+def find(g):
+    if isinstance(g, dict):
+        return find(g.get('OPSD', []))
+    return g
 
 config = building.get_config()
 countries, year = config['countries'], config['year']
+countries = list(filter(lambda i: i != 'DE', countries))
 
 technologies = pd.DataFrame(
     Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
@@ -44,7 +52,7 @@ isocodes['GB'] = 'United Kingdom'
 
 df = pd.read_csv(building.download_data(
     'https://media.githubusercontent.com/media/FRESNA/powerplantmatching/master/data/out/default/powerplants.csv'),
-    encoding='utf-8')
+    encoding='utf-8', converters={'projectID': literal_eval})
 
 df['Country'] = df['Country'].map({y:x for x, y in isocodes.items()})
 
