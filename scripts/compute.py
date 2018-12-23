@@ -62,6 +62,7 @@ es = EnergySystem.from_datapackage(
 )
 
 m = Model(es)
+m.write('tmp.lp', io_options={"symbolic_solver_labels":True})
 
 # constraints.emission_limit(m, limit=emission_limit)
 

@@ -98,13 +98,13 @@ for (country, carrier, tech, bins), (capacity, eta) in s.iterrows():
         'carrier': carrier,
         'capacity': capacity,
         'marginal_cost': float(marginal_cost),
-        'edge_parameters': json.dumps({}),
+        'output_parameters': json.dumps({"max": 0.85}),
         'type': 'dispatchable'}
 
     elements[name] = element
 
 # update biomass capacity
 elements['DE-biomass-biomass-1']['capacity'] = 7170  # https://www.energy-charts.de/power_inst_de.htm
-elements['DE-biomass-biomass-1']['edge_parameters'] = json.dumps({'summed_min': 6000, 'summed_max': 6500})
+elements['DE-biomass-biomass-1']['output_parameters'] = json.dumps({'summed_min': 6000, 'summed_max': 6500})
 
 building.write_elements('dispatchable.csv', pd.DataFrame.from_dict(elements, orient='index'))
