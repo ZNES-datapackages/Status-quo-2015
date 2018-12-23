@@ -33,12 +33,14 @@ countries, year = config['countries'], config['year']
 countries = list(filter(lambda i: i != 'DE', countries))
 
 technologies = pd.DataFrame(
-    Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
+    Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
+    #Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('electricity').read(keyed=True)).set_index(
         ['year', 'carrier', 'tech', 'parameter'])
 
 carriers = pd.DataFrame(
-    Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
+    Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
+    #Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('carrier').read(keyed=True)).set_index(
         ['year', 'carrier', 'parameter', 'unit']).sort_index()
 

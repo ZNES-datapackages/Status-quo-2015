@@ -15,6 +15,8 @@ Replace EMHIRES (downscaled MERRA data) with ERA-5
 https://www.sciencedirect.com/science/article/pii/S0960148118303677
 """
 
+import os
+
 import pandas as pd
 
 from oemof.tabular.datapackage import building

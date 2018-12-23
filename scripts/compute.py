@@ -98,9 +98,10 @@ supply_sum = (
     .sum()
     .reset_index()
 )
-supply_sum["from"] = supply_sum.apply(
-    lambda x: "-".join(x["from"].label.split("-")[1::]), axis=1
-)
+
+supply_sum['from'] = supply_sum['from'].apply(lambda i: '-'.join(i.label.split("-")[1:3:]))
+supply_sum = supply_sum.groupby(['from', 'to', 'type']).sum().reset_index()
+
 supply_sum.drop("type", axis=1, inplace=True)
 supply_sum = (
     supply_sum.set_index(["from", "to"]).unstack("from")
