@@ -29,6 +29,9 @@ suffix = '_load_old'
 column_names = [c + suffix for c in countries]
 
 timeseries = raw_data.loc[year, column_names]
+# replace missing last hour with previous
+timeseries.loc['2015-12-31 23:00:00', :] = timeseries.loc['2015-12-31 22:00:00', :]
+timeseries['DE_load_old'] = timeseries['DE_load_old'] * (596.3e6 / timeseries['DE_load_old'].sum())
 load_total = timeseries.sum()
 load_profile = timeseries / load_total
 
@@ -52,8 +55,6 @@ for c in countries:
 
     elements[element_name] = element
 
-# replace missing last hour with previous
-sequences.loc['2015-12-31 23:00:00', :] = sequences.loc['2015-12-31 22:00:00', :]
 
 building.write_elements('load.csv',
         pd.DataFrame.from_dict(elements, orient='index'))
