@@ -8,43 +8,40 @@ import pandas as pd
 
 from datapackage import Package
 from oemof.tabular.datapackage import building
+from oemof.tabular.tools import geometry
 
-def get_hydro_inflow(inflow_dir=None):
-    """ Adapted from https://github.com/FRESNA/vresutils/blob/master/vresutils/hydro.py
-    """
-
-    def read_inflow(country):
-        return (pd.read_csv(os.path.join(inflow_dir,
-                                         'Hydro_Inflow_{}.csv'.format(country)),
-                            parse_dates={'date': [0,1,2]})
-                .set_index('date')['Inflow [GWh]'])
-
-    europe = ['AT','BA','BE','BG','CH','CZ','DE',
-              'ES','FI','FR','HR','HU','IE','IT','KV',
-              'LT','LV','ME','MK','NL','NO','PL','PT',
-              'RO','RS','SE','SI','SK']
-
-    hyd = pd.DataFrame({cname: read_inflow(cname) for cname in europe})
-
-    hydro = hyd.resample('H').interpolate('cubic')
-
-    if True: #default norm
-        normalization_factor = (hydro.index.size/float(hyd.index.size)) #normalize to new sampling frequency
-    else:
-        normalization_factor = hydro.sum() / hyd.sum() #conserve total inflow for each country separately
-    hydro /= normalization_factor
-    return hydro
+from atlite import Cutout
 
 
 config = building.get_config()
 countries, year = config['countries'], config['year']
+filepath = building.download_data(
+    'http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/'
+    'NUTS_2013_10M_SH.zip',
+    unzip_file='NUTS_2013_10M_SH/data/NUTS_RG_10M_2013.shp')
 
-inflows = (get_hydro_inflow(building.download_data(
-        'https://zenodo.org/record/804244/files/Hydro_Inflow.zip?download=1',
-        unzip_file='Hydro_Inflow/')))
+nuts0 = pd.Series(geometry.nuts(filepath, nuts=0, tolerance=0.1))[countries]
 
-inflows = inflows.loc[inflows.index.year == 2011, :].copy()
-inflows['DK'], inflows['LU'] = 0, inflows['BE']
+
+countrynames = pd.DataFrame(Package(
+    'https://raw.githubusercontent.com/datasets/country-codes/5b645f4ea861be1362539d06641e5614353c9895/datapackage.json'
+    ).get_resource('country-codes').read(keyed=True)).set_index(['official_name_en'])\
+    ['ISO3166-1-Alpha-2'].to_dict()
+
+hyd = pd.read_csv(os.path.join( config['directories']['archive'], 'EIA-annual-hydro-generation.csv'),
+        skiprows=4, index_col=1
+    ).drop(['Unnamed: 0', 'Unnamed: 2'], axis=1).dropna().loc[:, str(year)]
+hyd = hyd.rename(index={'Czech Republic': 'Czechia'}).\
+    rename(index=countrynames).T
+hyd *= 1e3  # billion kWh -> MWh
+
+
+path = building.download_data('sftp://5.35.252.104/home/rutherford/atlite/cutouts/eu-2015.zip',
+                              username='rutherford', unzip_file='eu-2015/')
+inflows = Cutout(cutout_dir='cache/eu-2015', name='eu-2015').\
+    runoff(shapes=nuts0).to_pandas().T
+
+inflows = inflows * (hyd / inflows.sum())
 
 technologies = pd.DataFrame(
     Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
@@ -121,7 +118,8 @@ for country in countries:
             'capacity': capacity,
             'storage_capacity': capacities.loc[country, 'rsv_capacity'],
             'profile': country + '-reservoir-profile',
-            'efficiency': eta
+            'efficiency': eta,
+            'marginal_cost': 0.00000001
             }
 
 building.write_elements(
