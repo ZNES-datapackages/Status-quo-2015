@@ -1,18 +1,8 @@
 # -*- coding: utf-8 -*-
+""" Define dispatchable powerplants for Europe without Germany
 """
 
-Current and Prospective Costs of Electricity Generation until 2050
-https://www.diw.de/documents/publikationen/73/diw_01.c.424566.de/diw_datadoc_2013-068.pdf
-
-powerplantmatching
-https://github.com/FRESNA/powerplantmatching
-Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv
-
-CO2 Emission Factors for Fossil Fuels
-https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2_emission_factors_for_fossil_fuels_correction.pdf'
-
-"""
-
+import os
 import json
 
 import pandas as pd
@@ -31,6 +21,8 @@ def find(g):
 config = building.get_config()
 countries, year = config['countries'], config['year']
 countries = list(filter(lambda i: i != 'DE', countries))
+
+
 
 technologies = pd.DataFrame(
     Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
@@ -104,6 +96,13 @@ elements = {}
 
 co2 = carriers.at[(year, 'co2', 'cost', 'EUR/t'), 'value']
 
+# energy availability factor
+eaf = pd.read_csv(
+    os.path.join(
+        config['directories']['archive'], 'literature-values.csv'),
+    index_col=['year', 'country', 'carrier', 'technology', 'parameter']).\
+    loc[pd.IndexSlice[year, np.nan, np.nan, np.nan, 'eaf'], 'value']
+
 for (country, carrier, tech), capacity in s.iteritems():
     name = country + '-' + carrier + '-' + tech
 
@@ -121,7 +120,7 @@ for (country, carrier, tech), capacity in s.iteritems():
         'carrier': carrier,
         'capacity': capacity,
         'marginal_cost': float(marginal_cost),
-        'output_parameters': json.dumps({'max': 0.85}),
+        'output_parameters': json.dumps({'max': eaf}),
         'type': 'dispatchable'}
 
     elements[name] = element

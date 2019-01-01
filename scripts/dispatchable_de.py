@@ -3,6 +3,7 @@
 """
 
 import json
+import os
 
 import pandas as pd
 import numpy as np
@@ -14,6 +15,11 @@ from decimal import Decimal
 
 config = building.get_config()
 countries, year = config['countries'], config['year']
+
+literature = pd.read_csv(
+    os.path.join(
+        config['directories']['archive'], 'literature-values.csv'),
+    index_col=['year', 'country', 'carrier', 'technology', 'parameter'])
 
 technologies = pd.DataFrame(
     Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
@@ -70,7 +76,7 @@ df.loc[index, 'efficiency_estimate'] = \
     [etas[tuple(i)] for i in df.loc[index, ('carrier', 'tech')].values]
 
 index = df['carrier'].isin(['gas', 'coal', 'lignite'])
-bins = 6
+bins = config['bins']
 df.loc[index, 'bins'] = df[index].groupby(['carrier', 'tech'])['capacity_net_bnetza']\
     .apply(lambda i: pd.qcut(i, bins, labels=range(1, bins + 1)))
 df['bins'].fillna(1, inplace=True)
@@ -81,6 +87,10 @@ s = df.groupby(['country_code', 'carrier', 'tech', 'bins']).\
 elements = {}
 
 co2 = carriers.at[(year, 'co2', 'cost', 'EUR/t'), 'value']
+
+# energy availability factor
+eaf = literature.loc[
+    pd.IndexSlice[year, np.nan, np.nan, np.nan, 'eaf'], 'value']
 
 for (country, carrier, tech, bins), (capacity, eta) in s.iterrows():
     name = country + '-' + carrier + '-' + tech + '-' + str(bins)
@@ -98,14 +108,14 @@ for (country, carrier, tech, bins), (capacity, eta) in s.iterrows():
         'carrier': carrier,
         'capacity': capacity,
         'marginal_cost': float(marginal_cost),
-        'output_parameters': json.dumps({"max": 0.85}),
+        'output_parameters': json.dumps({"max": eaf}),
         'type': 'dispatchable'}
 
     elements[name] = element
 
 # update biomass capacity
-elements['DE-biomass-biomass-1']['capacity'] = 7170  # https://www.energy-charts.de/power_inst_de.htm
-elements['DE-biomass-biomass-1']['output_parameters'] = json.dumps({'min': 0.65, 'max': 0.7})
+elements['DE-biomass-biomass-1']['capacity'] = literature.loc[
+    pd.IndexSlice[year, 'DE', 'biomass', np.nan, 'capacity'], 'value']
 
 
 building.write_elements('dispatchable.csv', pd.DataFrame.from_dict(elements, orient='index'))

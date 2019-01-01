@@ -9,6 +9,7 @@
     "cache": "cache",
     "scripts": "scripts"
   },
+  "bins": 6,
   "year": 2015,
   "countries": [
     "LU",
