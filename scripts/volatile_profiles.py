@@ -15,6 +15,8 @@ Replace EMHIRES (downscaled MERRA data) with ERA-5
 https://www.sciencedirect.com/science/article/pii/S0960148118303677
 """
 
+import os
+
 import pandas as pd
 
 from oemof.tabular.datapackage import building
@@ -24,34 +26,45 @@ from datetime import datetime
 config = building.get_config()
 countries, year = config['countries'], str(config['year'])
 
-date_parser = lambda y: datetime.strptime(y, '%Y %m %d %H')
-date_columns = ['Year', 'Month', 'Day', 'Hour']
+filepath = building.download_data(
+    "https://www.renewables.ninja/static/downloads/ninja_europe_pv_v1.1.zip",
+    unzip_file="ninja_pv_europe_v1.1_merra2.csv")
 
-urls = ['http://setis.ec.europa.eu/sites/default/files/EMHIRES_DATA/TS_CF_COUNTRY_30yr_date.zip',
-        'http://setis.ec.europa.eu/sites/default/files/EMHIRES_DATA/TS_CF_OFFSHORE_30yr_date.zip']
-filenames = ['TS.CF.COUNTRY.30yr.date.txt', 'TS.CF.OFFSHORE.30yr.date.txt']
-technologies = ['wind-onshore', 'wind-offshore']
+raw_data = pd.read_csv(filepath, index_col=[0], parse_dates=True)
 
-for url, fname, tech in zip(urls, filenames, technologies):
+df = raw_data.loc[year]
 
-    df = pd.read_csv(building.download_data(url, unzip_file=fname), sep='\t',
-            parse_dates={'i': date_columns}, date_parser=date_parser,
-            index_col='i').reindex(columns=countries).dropna(axis=1).loc[year, :]
+sequences_df = pd.DataFrame(index=df.index)
 
-    renames = {c: c + '-' + tech + '-profile' for c in countries}
-    df.rename(columns=renames, inplace=True)
+for c in countries:
+    sequence_name = c + "-pv-profile"
+    sequences_df[sequence_name] = raw_data.loc[year][c].values
 
-    building.write_sequences('volatile_profile.csv', df)
+sequences_df.index = building.timeindex()
+building.write_sequences("volatile_profile.csv", sequences_df)
 
-df = pd.read_csv(
-        building.download_data(
-        'https://setis.ec.europa.eu/sites/default/files/EMHIRES_DATA/Solar/EMHIRESPV_country_level.zip',
-        unzip_file='EMHIRESPV_TSh_CF_Country_19862015.txt'),
-        sep=' ').loc[:, countries].iloc[-8760::, :]  # temporal coverage to 2015-12-31 23:00:00
+filepath = building.download_data(
+    "https://www.renewables.ninja/static/downloads/ninja_europe_wind_v1.1.zip",
+    unzip_file="ninja_wind_europe_v1.1_current_on-offshore.csv")
 
-df.index = pd.date_range(
-    '2015-01-01 00:00:00', '2015-12-31 23:00:00', freq='H')
+raw_data = pd.read_csv(filepath, index_col=[0], parse_dates=True)
 
-renames = {c: c + '-pv-profile' for c in countries}
-df.rename(columns=renames, inplace=True)
-building.write_sequences('volatile_profile.csv', df)
+# not in ninja dataset, as new market zones? (replace by german factor)
+raw_data['LU_ON'] = raw_data['DE_ON']
+raw_data['AT_ON'] = raw_data['DE_ON']
+raw_data['CH_ON'] = raw_data['DE_ON']
+raw_data['CZ_ON'] = raw_data['DE_ON']
+raw_data['PL_OFF'] = raw_data['SE_OFF']
+
+df = raw_data.loc[year]
+
+sequences_df = pd.DataFrame(index=df.index)
+
+for c in countries:
+    if c + '_OFF' in df.columns:
+        sequences_df[c + "-wind-offshore-profile"] = df[c + "_OFF"]
+    sequence_name = c + "-wind-onshore-profile"
+    sequences_df[sequence_name] = df[c + "_ON"]
+
+sequences_df.index = building.timeindex()
+building.write_sequences("volatile_profile.csv", sequences_df)

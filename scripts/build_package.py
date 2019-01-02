@@ -14,6 +14,7 @@ building.initialize_datapackage()
 
 import hubs
 import dispatchable
+import dispatchable_de
 import volatile
 import volatile_profiles
 import hydro

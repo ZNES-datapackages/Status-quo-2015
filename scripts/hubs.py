@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-NUTS Shapefiles
-http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_10M_SH.zip
+""" Define hub regions
 """
 
 import pandas as pd

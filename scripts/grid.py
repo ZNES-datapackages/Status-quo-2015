@@ -8,8 +8,6 @@ import pandas as pd
 
 from oemof.tabular.datapackage import building
 
-from itertools import combinations
-
 config = building.get_config()
 countries = config['countries']
 
@@ -19,7 +17,8 @@ filepath = building.input_filepath('transmission.csv')
 
 data = pd.read_csv(filepath, skiprows=3, sep=';', index_col=['from', 'to'])
 
-data = data.reindex(list(combinations(countries, 2))).dropna()
+idx = data.index.get_level_values(0).isin(countries) & data.index.get_level_values(1).isin(countries)
+data = data.loc[idx, :]
 
 elements = {}
 for (x, y), (value, _) in data.iterrows():

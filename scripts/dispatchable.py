@@ -1,35 +1,37 @@
 # -*- coding: utf-8 -*-
+""" Define dispatchable powerplants for Europe without Germany
 """
 
-Current and Prospective Costs of Electricity Generation until 2050
-https://www.diw.de/documents/publikationen/73/diw_01.c.424566.de/diw_datadoc_2013-068.pdf
-
-powerplantmatching
-https://github.com/FRESNA/powerplantmatching
-Matched_CARMA_ENTSOE_GEO_OPSD_WRI_reduced.csv
-
-CO2 Emission Factors for Fossil Fuels
-https://www.umweltbundesamt.de/sites/default/files/medien/1968/publikationen/co2_emission_factors_for_fossil_fuels_correction.pdf'
-
-"""
-
+import os
 import json
 
 import pandas as pd
+import numpy as np
 
 from oemof.tabular.datapackage import building
 from datapackage import Package
+from ast import literal_eval
 
+
+def find(g):
+    if isinstance(g, dict):
+        return find(g.get('OPSD', []))
+    return g
 
 config = building.get_config()
 countries, year = config['countries'], config['year']
+countries = list(filter(lambda i: i != 'DE', countries))
+
+
 
 technologies = pd.DataFrame(
+    #Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
     Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('electricity').read(keyed=True)).set_index(
         ['year', 'carrier', 'tech', 'parameter'])
 
 carriers = pd.DataFrame(
+    #Package('/home/planet/data/datapackages/technology-cost/datapackage.json')
     Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
     .get_resource('carrier').read(keyed=True)).set_index(
         ['year', 'carrier', 'parameter', 'unit']).sort_index()
@@ -44,7 +46,7 @@ isocodes['GB'] = 'United Kingdom'
 
 df = pd.read_csv(building.download_data(
     'https://media.githubusercontent.com/media/FRESNA/powerplantmatching/master/data/out/default/powerplants.csv'),
-    encoding='utf-8')
+    encoding='utf-8', converters={'projectID': literal_eval})
 
 df['Country'] = df['Country'].map({y:x for x, y in isocodes.items()})
 
@@ -94,6 +96,13 @@ elements = {}
 
 co2 = carriers.at[(year, 'co2', 'cost', 'EUR/t'), 'value']
 
+# energy availability factor
+eaf = pd.read_csv(
+    os.path.join(
+        config['directories']['archive'], 'literature-values.csv'),
+    index_col=['year', 'country', 'carrier', 'technology', 'parameter']).\
+    loc[pd.IndexSlice[year, np.nan, np.nan, np.nan, 'eaf'], 'value']
+
 for (country, carrier, tech), capacity in s.iteritems():
     name = country + '-' + carrier + '-' + tech
 
@@ -111,13 +120,9 @@ for (country, carrier, tech), capacity in s.iteritems():
         'carrier': carrier,
         'capacity': capacity,
         'marginal_cost': float(marginal_cost),
-        'edge_parameters': json.dumps({}),
+        'output_parameters': json.dumps({'max': eaf}),
         'type': 'dispatchable'}
 
     elements[name] = element
-
-# update biomass capacity
-elements['DE-biomass-biomass']['capacity'] = 7170  # https://www.energy-charts.de/power_inst_de.htm
-elements['DE-biomass-biomass']['edge_parameters'] = json.dumps({'summed_min': 6000, 'summed_max': 6500})
 
 building.write_elements('dispatchable.csv', pd.DataFrame.from_dict(elements, orient='index'))
