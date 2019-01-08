@@ -24,7 +24,6 @@ dash-renderer==0.16.1
 dash-table-experiments==0.6.0
 dask==1.0.0
 datapackage==1.5.1
--e git+git@github.com:znes/datapackage-utilities.git@7c41dbdb17efc44dfcbfc798fe1208b22b0ef7a3#egg=datapackage_utilities
 decorator==4.3.0
 dill==0.2.8.2
 docopt==0.6.2
