@@ -14,6 +14,7 @@ from oemof.tabular.datapackage import aggregation, building, processing
 from oemof.tabular.tools import postprocessing as pp
 import oemof.outputlib as outputlib
 from oemof.solph import EnergySystem, Model, Bus, Sink, constraints
+from oemof.outputlib import views
 from oemof.solph.components import GenericStorage
 
 
@@ -25,6 +26,13 @@ config = building.get_config()
 temporal_resolution = config.get("temporal-resolution", 1)
 
 path = os.path.expanduser('~')
+
+ef = pd.DataFrame(
+    Package('https://raw.githubusercontent.com/ZNES-datapackages/technology-cost/features/add-2015-data/datapackage.json')
+    .get_resource('carrier').read(keyed=True)).set_index(
+        ['year', 'carrier', 'parameter', 'unit']).sort_index() \
+    .loc[(2015, slice(None), 'emission-factor', 't (CO2)/MWh'), :] \
+    .reset_index().set_index('carrier')['value']
 
 # create results path
 scenario_path = os.path.join(path, 'results', config["name"])
@@ -80,6 +88,12 @@ modelstats["problem"].pop("Sense")
 with open(os.path.join(scenario_path, "modelstats.json"), "w") as outfile:
     json.dump(modelstats, outfile, indent=4)
 
+
+# emissions
+emissions = views.node_output_by_type(m.results, node_type=es.typemap['dispatchable'])
+emissions = emissions.loc[:, [c for c in emissions.columns.get_level_values(0) if c.tech != None]]  # filter shortage
+emissions = emissions.apply(lambda x: x * float(ef[(x.name[0].label.split('-')[1])])).T.groupby('to').sum().T.sum()
+emissions.to_csv(os.path.join(scenario_path, 'emissions.csv'))
 
 supply_sum = (
     pp.supply_results(
