@@ -101,6 +101,10 @@ for (country, carrier, tech, bins), (capacity, eta) in s.iterrows():
 
     marginal_cost = (fuel + vom + co2 * ef) / Decimal(eta)
 
+    output_parameters = {"max": eaf}
+
+    if carrier == 'gas':
+        output_parameters.update({"summed_min": 2000})
 
     element = {
         'bus': country + '-electricity',
@@ -108,7 +112,7 @@ for (country, carrier, tech, bins), (capacity, eta) in s.iterrows():
         'carrier': carrier,
         'capacity': capacity,
         'marginal_cost': float(marginal_cost),
-        'output_parameters': json.dumps({"max": eaf}),
+        'output_parameters': json.dumps(output_parameters),
         'type': 'dispatchable'}
 
     elements[name] = element
