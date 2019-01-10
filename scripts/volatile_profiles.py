@@ -23,7 +23,8 @@ from oemof.tabular.datapackage import building
 from datetime import datetime
 
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
+
 countries, year = config['countries'], str(config['year'])
 
 filepath = building.download_data(
@@ -40,7 +41,8 @@ for c in countries:
     sequence_name = c + "-pv-profile"
     sequences_df[sequence_name] = raw_data.loc[year][c].values
 
-sequences_df.index = building.timeindex()
+sequences_df.index = building.timeindex(year)
+
 building.write_sequences("volatile_profile.csv", sequences_df)
 
 filepath = building.download_data(
@@ -66,5 +68,5 @@ for c in countries:
     sequence_name = c + "-wind-onshore-profile"
     sequences_df[sequence_name] = df[c + "_ON"]
 
-sequences_df.index = building.timeindex()
+sequences_df.index = building.timeindex(year)
 building.write_sequences("volatile_profile.csv", sequences_df)

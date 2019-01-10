@@ -13,7 +13,7 @@ from datapackage import Package
 from decimal import Decimal
 
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 countries, year = config['countries'], config['year']
 
 literature = pd.read_csv(

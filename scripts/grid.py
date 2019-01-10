@@ -8,7 +8,7 @@ import pandas as pd
 
 from oemof.tabular.datapackage import building
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 countries = config['countries']
 
 loss = 0.03

@@ -1,0 +1,32 @@
+# Toml document to used for building model input
+# datapackage
+
+title = "Status quo 2015"
+description = "Electricity sector for Germany and neighbouring countries."
+name = "sq_2015"
+temporal-resolution = 1
+bins = 6
+year = 2015
+
+countries = [
+	"LU",
+	"NL",
+	"DK",
+	"SE",
+	"PL",
+	"CZ",
+	"AT",
+	"NO",
+	"BE",
+	"FR",
+	"CH",
+	"DE"
+	]
+
+[directories]
+elements = "data/elements"
+sequences = "data/sequences"
+geometries = "data/geometries"
+archive = "archive"
+cache = "cache"
+scripts = "scripts"

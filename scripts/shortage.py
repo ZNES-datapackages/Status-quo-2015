@@ -5,7 +5,7 @@ import pandas as pd
 
 from oemof.tabular.datapackage import building
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 
 buses = building.read_elements('bus.csv')
 buses.index.name = 'bus'

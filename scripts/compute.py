@@ -21,7 +21,7 @@ from oemof.solph.components import GenericStorage
 """
 """
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 
 temporal_resolution = config.get("temporal-resolution", 1)
 
@@ -103,9 +103,6 @@ supply_sum = (
         types=[
             "dispatchable",
             "volatile",
-            "conversion",
-            "backpressure",
-            "extraction",
             "reservoir",
         ],
     )

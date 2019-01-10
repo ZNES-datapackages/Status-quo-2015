@@ -7,7 +7,7 @@ import pandas as pd
 from oemof.tabular.datapackage import building
 from oemof.tabular.tools import geometry
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 
 filepath = building.download_data(
     'http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/'

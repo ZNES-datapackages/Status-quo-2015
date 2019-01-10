@@ -13,7 +13,7 @@ from oemof.tabular.tools import geometry
 from atlite import Cutout
 
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 countries, year = config['countries'], config['year']
 filepath = building.download_data(
     'http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/'
@@ -97,7 +97,7 @@ sequences.columns = sequences.columns.astype(str) + '-ror-profile'
 
 
 building.write_sequences(
-    'ror_profile.csv', sequences.set_index(building.timeindex()))
+    'ror_profile.csv', sequences.set_index(building.timeindex(str(year))))
 
 # reservoir
 elements = {}
@@ -130,7 +130,7 @@ sequences = sequences[countries].copy()
 sequences.dropna(axis=1, inplace=True)
 sequences.columns = sequences.columns.astype(str) + '-reservoir-profile'
 building.write_sequences(
-    'reservoir_profile.csv', sequences.set_index(building.timeindex()))
+    'reservoir_profile.csv', sequences.set_index(building.timeindex(str(year))))
 
 # phs
 elements = {}

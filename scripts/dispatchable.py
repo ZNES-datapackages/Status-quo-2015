@@ -18,7 +18,7 @@ def find(g):
         return find(g.get('OPSD', []))
     return g
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 countries, year = config['countries'], config['year']
 countries = list(filter(lambda i: i != 'DE', countries))
 

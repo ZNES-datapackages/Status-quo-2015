@@ -7,10 +7,10 @@ from oemof.tabular.datapackage import building, processing
 processing.clean_datapackage(directories=['data', 'ressources', 'results'])
 
 # get config file
-config = building.get_config()
+config = building.read_build_config('config.toml')
 
 # initialize directories etc. based on config file
-building.initialize_datapackage()
+building.initialize_datapackage(config)
 
 import hubs
 import dispatchable

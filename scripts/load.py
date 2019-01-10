@@ -12,7 +12,7 @@ import pandas as pd
 from oemof.tabular.datapackage import building
 
 
-config = building.get_config()
+config = building.read_build_config('config.toml')
 countries, year = config['countries'], str(config['year'])
 
 
@@ -59,5 +59,5 @@ for c in countries:
 building.write_elements('load.csv',
         pd.DataFrame.from_dict(elements, orient='index'))
 
-sequences.index = building.timeindex()
+sequences.index = building.timeindex(year)
 building.write_sequences('load_profile.csv', sequences)
