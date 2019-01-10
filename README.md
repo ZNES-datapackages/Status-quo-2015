@@ -12,7 +12,7 @@ To run the script, make sure the requirements e.g. via pip
 
 ### Scope
 
-The spatial resolution is at NUTS 0 level, thus on the level of national states. Which national states (nodes) are included is defined in the config.json.
+The spatial resolution is at NUTS 0 level, thus on the level of national states. Which national states (nodes) are included is defined in the config.toml.
 
 ### Build
 
