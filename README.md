@@ -6,7 +6,7 @@ If you want to build the package all you need to do is run one script.
 
 ### Requirements
 
-To run the script, make sure the requirements e.g. via pip. Package six has to be installed beforehand.
+To run the script, make sure the requirements are met e.g. via pip installation. Package six has to be installed beforehand.
 
     pip install six
 
