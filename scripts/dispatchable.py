@@ -11,6 +11,7 @@ import numpy as np
 from oemof.tabular.datapackage import building
 from datapackage import Package
 from ast import literal_eval
+from shapely.geometry import Point, MultiPoint
 
 
 def find(g):
@@ -89,10 +90,15 @@ mapper = {('Bioenergy', 'Steam Turbine'): ('biomass', 'biomass'),
 
 
 df['carrier'], df['tech'] = zip(*[mapper[tuple(i)] for i in df[['Fueltype', 'Technology']].values])
+df['Point'] = df[['lon', 'lat']].apply(lambda x: Point(x), axis=1)
 
-s = df.groupby(['Country', 'carrier', 'tech'])['Capacity'].sum()
+
+methods = {'Capacity': sum,
+           'Point': lambda x: MultiPoint(list(x)).centroid}
+s = df.groupby(['Country', 'carrier', 'tech']).agg(methods)
 
 elements = {}
+geometry = {}
 
 co2 = carriers.at[(year, 'co2', 'cost', 'EUR/t'), 'value']
 
@@ -103,7 +109,8 @@ eaf = pd.read_csv(
     index_col=['year', 'country', 'carrier', 'technology', 'parameter']).\
     loc[pd.IndexSlice[year, np.nan, np.nan, np.nan, 'eaf'], 'value']
 
-for (country, carrier, tech), capacity in s.iteritems():
+for (country, carrier, tech), row in s.iterrows():
+    capacity, geom = row.values
     name = country + '-' + carrier + '-' + tech
 
     vom = technologies.at[(year, carrier, tech, 'vom'), 'value']
@@ -113,6 +120,7 @@ for (country, carrier, tech), capacity in s.iteritems():
 
     marginal_cost = (fuel + vom + co2 * ef) / eta
 
+    geometry[name] = geom
 
     element = {
         'bus': country + '-electricity',
@@ -125,4 +133,6 @@ for (country, carrier, tech), capacity in s.iteritems():
 
     elements[name] = element
 
+building.write_geometries('dispatchable.geojson', pd.Series(
+    list(geometry.values()), index=geometry.keys()))
 building.write_elements('dispatchable.csv', pd.DataFrame.from_dict(elements, orient='index'))
