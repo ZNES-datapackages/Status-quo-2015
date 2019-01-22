@@ -4,13 +4,13 @@
 
 from oemof.tabular.datapackage import building, processing
 
-processing.clean_datapackage(directories=['data', 'ressources', 'results'])
+processing.clean(directories=['data', 'ressources', 'results'])
 
 # get config file
 config = building.read_build_config('config.toml')
 
 # initialize directories etc. based on config file
-building.initialize_datapackage(config)
+building.initialize(config)
 
 import hubs
 import dispatchable
