@@ -1,0 +1,13 @@
+name;balanced;geometry;type
+LU-electricity;True;LU-electricity;bus
+NL-electricity;True;NL-electricity;bus
+DK-electricity;True;DK-electricity;bus
+SE-electricity;True;SE-electricity;bus
+PL-electricity;True;PL-electricity;bus
+CZ-electricity;True;CZ-electricity;bus
+AT-electricity;True;AT-electricity;bus
+NO-electricity;True;NO-electricity;bus
+BE-electricity;True;BE-electricity;bus
+FR-electricity;True;FR-electricity;bus
+CH-electricity;True;CH-electricity;bus
+DE-electricity;True;DE-electricity;bus

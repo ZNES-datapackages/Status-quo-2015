@@ -1,0 +1,10 @@
+name;bus;capacity;carrier;efficiency;marginal_cost;profile;storage_capacity;tech;type
+AT-reservoir;AT-electricity;3734.30922087;hydro;0.9;1e-08;AT-reservoir-profile;3200000.0;reservoir;reservoir
+BE-reservoir;BE-electricity;89.99999999999989;hydro;0.9;1e-08;BE-reservoir-profile;0.0;reservoir;reservoir
+CH-reservoir;CH-electricity;9714.81332757;hydro;0.9;1e-08;CH-reservoir-profile;8800000.0;reservoir;reservoir
+CZ-reservoir;CZ-electricity;1350.0000000000002;hydro;0.9;1e-08;CZ-reservoir-profile;1500000.0;reservoir;reservoir
+DE-reservoir;DE-electricity;506.4027939000001;hydro;0.9;1e-08;DE-reservoir-profile;300000.0;reservoir;reservoir
+FR-reservoir;FR-electricity;8157.253885199999;hydro;0.9;1e-08;FR-reservoir-profile;9800000.0;reservoir;reservoir
+NO-reservoir;NO-electricity;26889.12741561;hydro;0.9;1e-08;NO-reservoir-profile;84400000.0;reservoir;reservoir
+PL-reservoir;PL-electricity;292.1348315000001;hydro;0.9;1e-08;PL-reservoir-profile;1600000.0;reservoir;reservoir
+SE-reservoir;SE-electricity;9779.999999999998;hydro;0.9;1e-08;SE-reservoir-profile;33800000.0;reservoir;reservoir

@@ -1,0 +1,13 @@
+name;bus;capacity;marginal_cost;type
+LU-shortage;LU-electricity;50000;1000;shortage
+NL-shortage;NL-electricity;50000;1000;shortage
+DK-shortage;DK-electricity;50000;1000;shortage
+SE-shortage;SE-electricity;50000;1000;shortage
+PL-shortage;PL-electricity;50000;1000;shortage
+CZ-shortage;CZ-electricity;50000;1000;shortage
+AT-shortage;AT-electricity;50000;1000;shortage
+NO-shortage;NO-electricity;50000;1000;shortage
+BE-shortage;BE-electricity;50000;1000;shortage
+FR-shortage;FR-electricity;50000;1000;shortage
+CH-shortage;CH-electricity;50000;1000;shortage
+DE-shortage;DE-electricity;50000;1000;shortage

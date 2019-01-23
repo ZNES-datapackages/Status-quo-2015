@@ -1,0 +1,10 @@
+name;bus;capacity;carrier;efficiency;profile;tech;type
+AT-ror;AT-electricity;5565.69077913;hydro;0.9;AT-ror-profile;ror;volatile
+BE-ror;BE-electricity;9.999999999999988;hydro;0.9;BE-ror-profile;ror;volatile
+CH-ror;CH-electricity;385.18667243;hydro;0.9;CH-ror-profile;ror;volatile
+CZ-ror;CZ-electricity;150.00000000000003;hydro;0.9;CZ-ror-profile;ror;volatile
+DE-ror;DE-electricity;3993.5972061000007;hydro;0.9;DE-ror-profile;ror;volatile
+FR-ror;FR-electricity;10242.746114800002;hydro;0.9;FR-ror-profile;ror;volatile
+NO-ror;NO-electricity;2210.87258439;hydro;0.9;NO-ror-profile;ror;volatile
+PL-ror;PL-electricity;707.8651684999999;hydro;0.9;PL-ror-profile;ror;volatile
+SE-ror;SE-electricity;6519.999999999999;hydro;0.9;SE-ror-profile;ror;volatile

@@ -1,0 +1,11 @@
+name;bus;capacity;carrier;efficiency;loss;marginal_cost;storage_capacity;storage_capacity_inital;tech;type
+AT-phs;AT-electricity;3800.0;hydro;0.75;0;1e-07;22800.0;0.5;phs;storage
+BE-phs;BE-electricity;1300.0;hydro;0.75;0;1e-07;7800.0;0.5;phs;storage
+CH-phs;CH-electricity;1900.0;hydro;0.75;0;1e-07;11400.0;0.5;phs;storage
+CZ-phs;CZ-electricity;700.0;hydro;0.75;0;1e-07;4200.0;0.5;phs;storage
+DE-phs;DE-electricity;6800.0;hydro;0.75;0;1e-07;40800.0;0.5;phs;storage
+FR-phs;FR-electricity;7000.0;hydro;0.75;0;1e-07;42000.0;0.5;phs;storage
+LU-phs;LU-electricity;1300.0;hydro;0.75;0;1e-07;7800.0;0.5;phs;storage
+NO-phs;NO-electricity;1400.0;hydro;0.75;0;1e-07;8400.0;0.5;phs;storage
+PL-phs;PL-electricity;1400.0;hydro;0.75;0;1e-07;8400.0;0.5;phs;storage
+SE-phs;SE-electricity;100.0;hydro;0.75;0;1e-07;600.0;0.5;phs;storage

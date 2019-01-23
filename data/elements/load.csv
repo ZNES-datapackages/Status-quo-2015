@@ -1,0 +1,13 @@
+name;amount;bus;profile;tech;type
+AT-load;69617500.0;AT-electricity;AT-load-profile;load;load
+BE-load;85221501.0;BE-electricity;BE-load-profile;load;load
+CH-load;62060211.0;CH-electricity;CH-load-profile;load;load
+CZ-load;63527279.0;CZ-electricity;CZ-load-profile;load;load
+DE-load;596300000.0000004;DE-electricity;DE-load-profile;load;load
+DK-load;33892544.0;DK-electricity;DK-load-profile;load;load
+FR-load;471248128.0;FR-electricity;FR-load-profile;load;load
+LU-load;6322455.0;LU-electricity;LU-load-profile;load;load
+NL-load;113250067.0;NL-electricity;NL-load-profile;load;load
+NO-load;128653598.0;NO-electricity;NO-load-profile;load;load
+PL-load;149958427.0;PL-electricity;PL-load-profile;load;load
+SE-load;135926829.0;SE-electricity;SE-load-profile;load;load
