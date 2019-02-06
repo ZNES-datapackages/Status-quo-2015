@@ -128,7 +128,8 @@ for (country, carrier, tech), row in s.iterrows():
         'carrier': carrier,
         'capacity': capacity,
         'marginal_cost': float(marginal_cost),
-        'output_parameters': json.dumps({'max': eaf}),
+        'output_parameters': json.dumps(
+            {'max': eaf, 'emission_factor': float(ef / eta)}),
         'type': 'dispatchable'}
 
     elements[name] = element

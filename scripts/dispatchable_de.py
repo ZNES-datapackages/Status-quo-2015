@@ -101,7 +101,8 @@ for (country, carrier, tech, bins), (capacity, eta) in s.iterrows():
 
     marginal_cost = (fuel + vom + co2 * ef) / Decimal(eta)
 
-    output_parameters = {"max": eaf}
+    output_parameters = {"max": eaf,
+                         "emission_factor": float(ef / Decimal(eta))}
 
     if carrier == 'gas':
         output_parameters.update({"summed_min": 2000})
