@@ -1,84 +1,84 @@
 name;bus;capacity;carrier;marginal_cost;output_parameters;tech;type
-AT-coal-ccgt;AT-electricity;704.0;coal;35.17525773195877;{"max": 0.85};ccgt;dispatchable
-AT-coal-st;AT-electricity;533.3239015883374;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-AT-gas-ccgt;AT-electricity;3591.66;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-AT-gas-ocgt;AT-electricity;1147.0;gas;64.39897698209718;{"max": 0.85};ocgt;dispatchable
-AT-gas-st;AT-electricity;13.5;gas;61.265206812652075;{"max": 0.85};st;dispatchable
-BE-biomass-biomass;BE-electricity;268.0;biomass;15.384615384615385;{"max": 0.85};biomass;dispatchable
-BE-coal-st;BE-electricity;1286.9135501718852;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-BE-gas-ccgt;BE-electricity;4693.967517174199;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-BE-gas-ocgt;BE-electricity;285.39690577276065;gas;64.39897698209718;{"max": 0.85};ocgt;dispatchable
-BE-gas-st;BE-electricity;239.22232901007786;gas;61.265206812652075;{"max": 0.85};st;dispatchable
-BE-uranium-st;BE-electricity;5925.8;uranium;34.63855421686747;{"max": 0.85};st;dispatchable
-CH-uranium-st;CH-electricity;3430.0;uranium;34.63855421686747;{"max": 0.85};st;dispatchable
-CZ-coal-st;CZ-electricity;6369.843605869451;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-CZ-gas-ccgt;CZ-electricity;847.0;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-CZ-lignite-boa;CZ-electricity;4623.0;lignite;30.18433179723502;{"max": 0.85};boa;dispatchable
-CZ-uranium-st;CZ-electricity;8106.0;uranium;34.63855421686747;{"max": 0.85};st;dispatchable
-DK-biomass-biomass;DK-electricity;195.0;biomass;15.384615384615385;{"max": 0.85};biomass;dispatchable
-DK-coal-st;DK-electricity;3629.7834697513363;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-DK-gas-ccgt;DK-electricity;208.2;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-DK-gas-st;DK-electricity;1319.2414124514034;gas;61.265206812652075;{"max": 0.85};st;dispatchable
-DK-oil-st;DK-electricity;665.0;oil;78.31202046035807;{"max": 0.85};st;dispatchable
-DK-waste-chp;DK-electricity;1110.0;waste;118.18540772532191;{"max": 0.85};chp;dispatchable
-FR-coal-st;FR-electricity;3175.0;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-FR-gas-ccgt;FR-electricity;6679.679760188448;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-FR-oil-st;FR-electricity;7355.0;oil;78.31202046035807;{"max": 0.85};st;dispatchable
-FR-uranium-st;FR-electricity;63130.0;uranium;34.63855421686747;{"max": 0.85};st;dispatchable
-FR-waste-chp;FR-electricity;302.0;waste;118.18540772532191;{"max": 0.85};chp;dispatchable
-LU-gas-ccgt;LU-electricity;352.85450039667296;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-NL-coal-st;NL-electricity;7293.0;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-NL-gas-ccgt;NL-electricity;17586.990792282784;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-NL-uranium-st;NL-electricity;492.0;uranium;34.63855421686747;{"max": 0.85};st;dispatchable
-NL-waste-chp;NL-electricity;548.0;waste;118.18540772532191;{"max": 0.85};chp;dispatchable
-NO-gas-ccgt;NO-electricity;1514.4;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-PL-biomass-biomass;PL-electricity;205.0;biomass;15.384615384615385;{"max": 0.85};biomass;dispatchable
-PL-coal-st;PL-electricity;20530.627507060235;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-PL-gas-ccgt;PL-electricity;1133.9;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-PL-lignite-boa;PL-electricity;9406.0;lignite;30.18433179723502;{"max": 0.85};boa;dispatchable
-PL-oil-st;PL-electricity;345.0;oil;78.31202046035807;{"max": 0.85};st;dispatchable
-SE-biomass-biomass;SE-electricity;336.0;biomass;15.384615384615385;{"max": 0.85};biomass;dispatchable
-SE-coal-st;SE-electricity;450.0;coal;43.74358974358975;{"max": 0.85};st;dispatchable
-SE-gas-ccgt;SE-electricity;708.0;gas;43.488372093023266;{"max": 0.85};ccgt;dispatchable
-SE-oil-st;SE-electricity;2135.0;oil;78.31202046035807;{"max": 0.85};st;dispatchable
-SE-uranium-st;SE-electricity;9532.0;uranium;34.63855421686747;{"max": 0.85};st;dispatchable
-SE-waste-chp;SE-electricity;382.0;waste;118.18540772532191;{"max": 0.85};chp;dispatchable
-DE-biomass-biomass-1;DE-electricity;7170.0;biomass;18.345524856730176;{"max": 0.85};biomass;dispatchable
-DE-coal-ccgt-1;DE-electricity;97.0;coal;34.88752556237219;{"max": 0.85};ccgt;dispatchable
-DE-coal-ccgt-3;DE-electricity;43.3;coal;36.452991452991455;{"max": 0.85};ccgt;dispatchable
-DE-coal-ccgt-4;DE-electricity;55.6;coal;41.66056166056166;{"max": 0.85};ccgt;dispatchable
-DE-coal-ccgt-5;DE-electricity;66.0;coal;34.78083588175331;{"max": 0.85};ccgt;dispatchable
-DE-coal-ccgt-6;DE-electricity;237.70000000000002;coal;46.51670074982958;{"max": 0.85};ccgt;dispatchable
-DE-coal-st-1;DE-electricity;830.84;coal;44.69425424233402;{"max": 0.85};st;dispatchable
-DE-coal-st-2;DE-electricity;1766.0;coal;44.49865746068277;{"max": 0.85};st;dispatchable
-DE-coal-st-3;DE-electricity;2500.0;coal;45.99841395717685;{"max": 0.85};st;dispatchable
-DE-coal-st-4;DE-electricity;5359.7;coal;45.19205298013246;{"max": 0.85};st;dispatchable
-DE-coal-st-5;DE-electricity;7805.6;coal;42.76880222841226;{"max": 0.85};st;dispatchable
-DE-coal-st-6;DE-electricity;14399.7;coal;39.869618696186954;{"max": 0.85};st;dispatchable
-DE-gas-ccgt-1;DE-electricity;320.81;gas;48.961468385181206;{"max": 0.85, "summed_min": 2000};ccgt;dispatchable
-DE-gas-ccgt-2;DE-electricity;756.3000000000001;gas;52.3123827250029;{"max": 0.85, "summed_min": 2000};ccgt;dispatchable
-DE-gas-ccgt-3;DE-electricity;1548.1;gas;48.151847294450384;{"max": 0.85, "summed_min": 2000};ccgt;dispatchable
-DE-gas-ccgt-4;DE-electricity;1921.1;gas;49.72459639126306;{"max": 0.85, "summed_min": 2000};ccgt;dispatchable
-DE-gas-ccgt-5;DE-electricity;4567.0;gas;51.19627058203374;{"max": 0.85, "summed_min": 2000};ccgt;dispatchable
-DE-gas-ccgt-6;DE-electricity;9426.2;gas;47.17117117117117;{"max": 0.85, "summed_min": 2000};ccgt;dispatchable
-DE-gas-ocgt-1;DE-electricity;62.6;gas;68.93847318415598;{"max": 0.85, "summed_min": 2000};ocgt;dispatchable
-DE-gas-ocgt-2;DE-electricity;184.29999999999998;gas;68.51002200552601;{"max": 0.85, "summed_min": 2000};ocgt;dispatchable
-DE-gas-ocgt-3;DE-electricity;479.6;gas;71.66382060548297;{"max": 0.85, "summed_min": 2000};ocgt;dispatchable
-DE-gas-ocgt-4;DE-electricity;369.0;gas;77.91946902108987;{"max": 0.85, "summed_min": 2000};ocgt;dispatchable
-DE-gas-ocgt-5;DE-electricity;534.4;gas;76.32158629124066;{"max": 0.85, "summed_min": 2000};ocgt;dispatchable
-DE-gas-ocgt-6;DE-electricity;1249.1;gas;66.15000656771312;{"max": 0.85, "summed_min": 2000};ocgt;dispatchable
-DE-gas-st-1;DE-electricity;191.02000000000004;gas;64.66909530374235;{"max": 0.85, "summed_min": 2000};st;dispatchable
-DE-gas-st-2;DE-electricity;347.8;gas;66.39837660058697;{"max": 0.85, "summed_min": 2000};st;dispatchable
-DE-gas-st-3;DE-electricity;422.8;gas;65.53878188443518;{"max": 0.85, "summed_min": 2000};st;dispatchable
-DE-gas-st-4;DE-electricity;654.0;gas;67.1320927240045;{"max": 0.85, "summed_min": 2000};st;dispatchable
-DE-gas-st-5;DE-electricity;1130.1999999999998;gas;65.60398707515121;{"max": 0.85, "summed_min": 2000};st;dispatchable
-DE-gas-st-6;DE-electricity;4845.8;gas;66.90779332935408;{"max": 0.85, "summed_min": 2000};st;dispatchable
-DE-lignite-boa-1;DE-electricity;237.10000000000002;lignite;35.591874268516975;{"max": 0.85};boa;dispatchable
-DE-lignite-boa-2;DE-electricity;868.9;lignite;37.215909090909086;{"max": 0.85};boa;dispatchable
-DE-lignite-boa-3;DE-electricity;1693.0;lignite;42.83199195171026;{"max": 0.85};boa;dispatchable
-DE-lignite-boa-4;DE-electricity;3584.0;lignite;38.995237222934605;{"max": 0.85};boa;dispatchable
-DE-lignite-boa-5;DE-electricity;6183.0;lignite;34.48485339381176;{"max": 0.85};boa;dispatchable
-DE-lignite-boa-6;DE-electricity;10406.0;lignite;32.78025870033878;{"max": 0.85};boa;dispatchable
-DE-oil-st-1;DE-electricity;4236.000000000001;oil;86.61501870410565;{"max": 0.85};st;dispatchable
-DE-uranium-st-1;DE-electricity;12075.0;uranium;34.848484848484844;{"max": 0.85};st;dispatchable
-DE-waste-chp-1;DE-electricity;3128.3999999999996;waste;83.44606060606087;{"max": 0.85};chp;dispatchable
+AT-coal-ccgt;AT-electricity;704.0;coal;35.17525773195877;{"max": 0.85, "emission_factor": 0.7010309278350515};ccgt;dispatchable
+AT-coal-st;AT-electricity;533.3239015883374;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+AT-gas-ccgt;AT-electricity;3591.66;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+AT-gas-ocgt;AT-electricity;1147.0;gas;64.39897698209718;{"max": 0.85, "emission_factor": 0.5115089514066496};ocgt;dispatchable
+AT-gas-st;AT-electricity;13.5;gas;61.265206812652075;{"max": 0.85, "emission_factor": 0.48661800486618007};st;dispatchable
+BE-biomass-biomass;BE-electricity;268.0;biomass;15.384615384615385;{"max": 0.85, "emission_factor": 0.0};biomass;dispatchable
+BE-coal-st;BE-electricity;1286.9135501718852;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+BE-gas-ccgt;BE-electricity;4693.967517174199;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+BE-gas-ocgt;BE-electricity;285.39690577276065;gas;64.39897698209718;{"max": 0.85, "emission_factor": 0.5115089514066496};ocgt;dispatchable
+BE-gas-st;BE-electricity;239.22232901007786;gas;61.265206812652075;{"max": 0.85, "emission_factor": 0.48661800486618007};st;dispatchable
+BE-uranium-st;BE-electricity;5925.8;uranium;34.63855421686747;{"max": 0.85, "emission_factor": 0.0};st;dispatchable
+CH-uranium-st;CH-electricity;3430.0;uranium;34.63855421686747;{"max": 0.85, "emission_factor": 0.0};st;dispatchable
+CZ-coal-st;CZ-electricity;6369.843605869451;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+CZ-gas-ccgt;CZ-electricity;847.0;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+CZ-lignite-boa;CZ-electricity;4623.0;lignite;30.18433179723502;{"max": 0.85, "emission_factor": 0.9216589861751152};boa;dispatchable
+CZ-uranium-st;CZ-electricity;8106.0;uranium;34.63855421686747;{"max": 0.85, "emission_factor": 0.0};st;dispatchable
+DK-biomass-biomass;DK-electricity;195.0;biomass;15.384615384615385;{"max": 0.85, "emission_factor": 0.0};biomass;dispatchable
+DK-coal-st;DK-electricity;3629.7834697513363;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+DK-gas-ccgt;DK-electricity;208.2;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+DK-gas-st;DK-electricity;1319.2414124514034;gas;61.265206812652075;{"max": 0.85, "emission_factor": 0.48661800486618007};st;dispatchable
+DK-oil-st;DK-electricity;665.0;oil;78.31202046035807;{"max": 0.85, "emission_factor": 0.7416879795396419};st;dispatchable
+DK-waste-chp;DK-electricity;1110.0;waste;118.18540772532191;{"max": 0.85, "emission_factor": 1.4163090128755365};chp;dispatchable
+FR-coal-st;FR-electricity;3175.0;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+FR-gas-ccgt;FR-electricity;6679.679760188448;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+FR-oil-st;FR-electricity;7355.0;oil;78.31202046035807;{"max": 0.85, "emission_factor": 0.7416879795396419};st;dispatchable
+FR-uranium-st;FR-electricity;63130.0;uranium;34.63855421686747;{"max": 0.85, "emission_factor": 0.0};st;dispatchable
+FR-waste-chp;FR-electricity;302.0;waste;118.18540772532191;{"max": 0.85, "emission_factor": 1.4163090128755365};chp;dispatchable
+LU-gas-ccgt;LU-electricity;352.85450039667296;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+NL-coal-st;NL-electricity;7293.0;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+NL-gas-ccgt;NL-electricity;17586.990792282784;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+NL-uranium-st;NL-electricity;492.0;uranium;34.63855421686747;{"max": 0.85, "emission_factor": 0.0};st;dispatchable
+NL-waste-chp;NL-electricity;548.0;waste;118.18540772532191;{"max": 0.85, "emission_factor": 1.4163090128755365};chp;dispatchable
+NO-gas-ccgt;NO-electricity;1514.4;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+PL-biomass-biomass;PL-electricity;205.0;biomass;15.384615384615385;{"max": 0.85, "emission_factor": 0.0};biomass;dispatchable
+PL-coal-st;PL-electricity;20530.627507060235;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+PL-gas-ccgt;PL-electricity;1133.9;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+PL-lignite-boa;PL-electricity;9406.0;lignite;30.18433179723502;{"max": 0.85, "emission_factor": 0.9216589861751152};boa;dispatchable
+PL-oil-st;PL-electricity;345.0;oil;78.31202046035807;{"max": 0.85, "emission_factor": 0.7416879795396419};st;dispatchable
+SE-biomass-biomass;SE-electricity;336.0;biomass;15.384615384615385;{"max": 0.85, "emission_factor": 0.0};biomass;dispatchable
+SE-coal-st;SE-electricity;450.0;coal;43.74358974358975;{"max": 0.85, "emission_factor": 0.8717948717948718};st;dispatchable
+SE-gas-ccgt;SE-electricity;708.0;gas;43.488372093023266;{"max": 0.85, "emission_factor": 0.33222591362126247};ccgt;dispatchable
+SE-oil-st;SE-electricity;2135.0;oil;78.31202046035807;{"max": 0.85, "emission_factor": 0.7416879795396419};st;dispatchable
+SE-uranium-st;SE-electricity;9532.0;uranium;34.63855421686747;{"max": 0.85, "emission_factor": 0.0};st;dispatchable
+SE-waste-chp;SE-electricity;382.0;waste;118.18540772532191;{"max": 0.85, "emission_factor": 1.4163090128755365};chp;dispatchable
+DE-biomass-biomass-1;DE-electricity;7170.0;biomass;18.345524856730176;{"max": 0.85, "emission_factor": 0.0};biomass;dispatchable
+DE-coal-ccgt-1;DE-electricity;97.0;coal;34.88752556237219;{"max": 0.85, "emission_factor": 0.6952965235173825};ccgt;dispatchable
+DE-coal-ccgt-3;DE-electricity;43.3;coal;36.452991452991455;{"max": 0.85, "emission_factor": 0.7264957264957266};ccgt;dispatchable
+DE-coal-ccgt-4;DE-electricity;55.6;coal;41.66056166056166;{"max": 0.85, "emission_factor": 0.8302808302808303};ccgt;dispatchable
+DE-coal-ccgt-5;DE-electricity;66.0;coal;34.78083588175331;{"max": 0.85, "emission_factor": 0.6931702344546381};ccgt;dispatchable
+DE-coal-ccgt-6;DE-electricity;237.70000000000002;coal;46.51670074982958;{"max": 0.85, "emission_factor": 0.9270620313565099};ccgt;dispatchable
+DE-coal-st-1;DE-electricity;830.84;coal;44.69425424233402;{"max": 0.85, "emission_factor": 0.8907412920512056};st;dispatchable
+DE-coal-st-2;DE-electricity;1766.0;coal;44.49865746068277;{"max": 0.85, "emission_factor": 0.8868431146912159};st;dispatchable
+DE-coal-st-3;DE-electricity;2500.0;coal;45.99841395717685;{"max": 0.85, "emission_factor": 0.9167327517842982};st;dispatchable
+DE-coal-st-4;DE-electricity;5359.7;coal;45.19205298013246;{"max": 0.85, "emission_factor": 0.9006622516556293};st;dispatchable
+DE-coal-st-5;DE-electricity;7805.6;coal;42.76880222841226;{"max": 0.85, "emission_factor": 0.8523676880222842};st;dispatchable
+DE-coal-st-6;DE-electricity;14399.7;coal;39.869618696186954;{"max": 0.85, "emission_factor": 0.7945879458794587};st;dispatchable
+DE-gas-ccgt-1;DE-electricity;320.81;gas;48.961468385181206;{"max": 0.85, "emission_factor": 0.37403719163622007, "summed_min": 2000};ccgt;dispatchable
+DE-gas-ccgt-2;DE-electricity;756.3000000000001;gas;52.3123827250029;{"max": 0.85, "emission_factor": 0.39963623166541556, "summed_min": 2000};ccgt;dispatchable
+DE-gas-ccgt-3;DE-electricity;1548.1;gas;48.151847294450384;{"max": 0.85, "emission_factor": 0.36785215656570197, "summed_min": 2000};ccgt;dispatchable
+DE-gas-ccgt-4;DE-electricity;1921.1;gas;49.72459639126306;{"max": 0.85, "emission_factor": 0.3798670465337132, "summed_min": 2000};ccgt;dispatchable
+DE-gas-ccgt-5;DE-electricity;4567.0;gas;51.19627058203374;{"max": 0.85, "emission_factor": 0.3911097829032371, "summed_min": 2000};ccgt;dispatchable
+DE-gas-ccgt-6;DE-electricity;9426.2;gas;47.17117117117117;{"max": 0.85, "emission_factor": 0.36036036036036034, "summed_min": 2000};ccgt;dispatchable
+DE-gas-ocgt-1;DE-electricity;62.6;gas;68.93847318415598;{"max": 0.85, "emission_factor": 0.5475653152037806, "summed_min": 2000};ocgt;dispatchable
+DE-gas-ocgt-2;DE-electricity;184.29999999999998;gas;68.51002200552601;{"max": 0.85, "emission_factor": 0.54416220814556, "summed_min": 2000};ocgt;dispatchable
+DE-gas-ocgt-3;DE-electricity;479.6;gas;71.66382060548297;{"max": 0.85, "emission_factor": 0.5692122367393405, "summed_min": 2000};ocgt;dispatchable
+DE-gas-ocgt-4;DE-electricity;369.0;gas;77.91946902108987;{"max": 0.85, "emission_factor": 0.6188996745122309, "summed_min": 2000};ocgt;dispatchable
+DE-gas-ocgt-5;DE-electricity;534.4;gas;76.32158629124066;{"max": 0.85, "emission_factor": 0.6062079927818956, "summed_min": 2000};ocgt;dispatchable
+DE-gas-ocgt-6;DE-electricity;1249.1;gas;66.15000656771312;{"max": 0.85, "emission_factor": 0.5254170497832655, "summed_min": 2000};ocgt;dispatchable
+DE-gas-st-1;DE-electricity;191.02000000000004;gas;64.66909530374235;{"max": 0.85, "emission_factor": 0.5136544503871513, "summed_min": 2000};st;dispatchable
+DE-gas-st-2;DE-electricity;347.8;gas;66.39837660058697;{"max": 0.85, "emission_factor": 0.5273898062000554, "summed_min": 2000};st;dispatchable
+DE-gas-st-3;DE-electricity;422.8;gas;65.53878188443518;{"max": 0.85, "emission_factor": 0.5205622071837585, "summed_min": 2000};st;dispatchable
+DE-gas-st-4;DE-electricity;654.0;gas;67.1320927240045;{"max": 0.85, "emission_factor": 0.5332175752502343, "summed_min": 2000};st;dispatchable
+DE-gas-st-5;DE-electricity;1130.1999999999998;gas;65.60398707515121;{"max": 0.85, "emission_factor": 0.5210801197390883, "summed_min": 2000};st;dispatchable
+DE-gas-st-6;DE-electricity;4845.8;gas;66.90779332935408;{"max": 0.85, "emission_factor": 0.5314360073816845, "summed_min": 2000};st;dispatchable
+DE-lignite-boa-1;DE-electricity;237.10000000000002;lignite;35.591874268516975;{"max": 0.85, "emission_factor": 1.0867747868249458};boa;dispatchable
+DE-lignite-boa-2;DE-electricity;868.9;lignite;37.215909090909086;{"max": 0.85, "emission_factor": 1.1363636363636362};boa;dispatchable
+DE-lignite-boa-3;DE-electricity;1693.0;lignite;42.83199195171026;{"max": 0.85, "emission_factor": 1.3078470824949697};boa;dispatchable
+DE-lignite-boa-4;DE-electricity;3584.0;lignite;38.995237222934605;{"max": 0.85, "emission_factor": 1.1906942663491482};boa;dispatchable
+DE-lignite-boa-5;DE-electricity;6183.0;lignite;34.48485339381176;{"max": 0.85, "emission_factor": 1.0529726227118095};boa;dispatchable
+DE-lignite-boa-6;DE-electricity;10406.0;lignite;32.78025870033878;{"max": 0.85, "emission_factor": 1.0009239297813366};boa;dispatchable
+DE-oil-st-1;DE-electricity;4236.000000000001;oil;86.61501870410565;{"max": 0.85, "emission_factor": 0.8203251281577608};st;dispatchable
+DE-uranium-st-1;DE-electricity;12075.0;uranium;34.848484848484844;{"max": 0.85, "emission_factor": 0.0};st;dispatchable
+DE-waste-chp-1;DE-electricity;3128.3999999999996;waste;83.44606060606087;{"max": 0.85, "emission_factor": 1.000000000000003};chp;dispatchable
