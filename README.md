@@ -12,6 +12,11 @@ To run the script, make sure the requirements are met e.g. via pip installation.
 
     pip install --process-dependency-links -U -r requirements.txt
 
+**NOTE**: `--process-dependency-links` requires pip version  `<19.x`,
+you can change your pip version as follows:
+
+    pip install pip==18
+
 ### Scope
 
 The spatial resolution is at NUTS 0 level, thus on the level of national states. Which national states (nodes) are included is defined in the config.toml.
