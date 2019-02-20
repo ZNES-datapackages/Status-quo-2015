@@ -44,7 +44,7 @@ Open Power System Data. 2018. Data Package Time series. Version 2018-06-30. http
 
 Open Power System Data. 2018. Data Package Conventional power plants. Version 2018-12-20. https://doi.org/10.25832/conventional_power_plants/2018-12-20. (Primary data from various sources, for a complete list see URL)
 
-Data on capacity factors for wind and pv in European countries is downloaded from [www.renewables.ninja](www.renewables.ninja).
+Data on capacity factors for wind and pv in European countries is downloaded from [www.renewables.ninja](https://www.renewables.ninja/) .
 
 Stefan Pfenninger and Iain Staffell (2016). Long-term patterns of European PV output using 30 years of validated hourly reanalysis and satellite data. Energy 114, pp. 1251-1265. doi: 10.1016/j.energy.2016.08.060.
 
