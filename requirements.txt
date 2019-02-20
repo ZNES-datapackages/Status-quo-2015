@@ -55,7 +55,7 @@ nbformat==4.4.0
 networkx==2.1
 nose==1.3.7
 -e git+https://github.com/oemof/oemof.git@405a67b021081330bfdb67723ad8de153c1773a4#egg=oemof
--e git+https://github.com/oemof/oemof-tabular.git@6faed76ee62e0257450e49e9cf90d8056e70938e#egg=oemof.tabular
+-e git+https://github.com/oemof/oemof-tabular.git@15801fa2918e605e04b055f73b63e77bde65e4fa#egg=oemof.tabular
 openpyxl==2.4.11
 pandas==0.23.4
 paramiko==2.4.2
