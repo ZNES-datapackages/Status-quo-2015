@@ -40,7 +40,7 @@ EN: © EuroGeographics for the administrative boundaries
 
 Load data and data on the conventional power plant capacity in Germany is provided by the [Open Power System Data - A free and open data platform for power system modelling](https://open-power-system-data.org/).
 
-Open Power System Data. 2018. Data Package Time series. Version 2018-06-30. https://doi.org/10.25832/time\_series/2018-06-30. (Primary data from various sources, for a complete list see URL).
+Open Power System Data. 2018. Data Package Time series. Version 2018-06-30. https://doi.org/10.25832/time_series/2018-06-30. (Primary data from various sources, for a complete list see URL).
 
 Open Power System Data. 2018. Data Package Conventional power plants. Version 2018-12-20. https://doi.org/10.25832/conventional\_power\_plants/2018-12-20. (Primary data from various sources, for a complete list see URL)
 
