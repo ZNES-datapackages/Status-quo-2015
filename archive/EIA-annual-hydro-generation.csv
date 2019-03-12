@@ -1,0 +1,21 @@
+"International_data"
+"https://www.eia.gov/beta/international/data/browser/#/?pa=000000000000000000000000000000g&c=00280008002gg0040000000000400000gg0004000008&ct=0&ug=8&tl_type=a&tl_id=12-A&vs=INTL.33-12-AUT-BKWH.A&vo=0&v=H&start=2011&end=2015&s=INTL.33-12-DEU-BKWH.A"
+"Mon Jul 09 2018 17:15:18 GMT+0200 (CEST)"
+"Source: U.S. Energy Information Administration"
+,,,2011,2012,2013,2014,2015
+"","Generation","Billion Kwh"
+"","Electricity",""
+"","Renewables",""
+"","Hydroelectricity",""
+"","Austria","Billion Kwh",32.623,41.956,39.918,39.179,34.919
+"","Belgium","Billion Kwh",0.193,0.353,0.376,0.289,0.315
+"","Czech Republic","Billion Kwh",1.95,2.107,2.704,1.909,1.779
+"","Denmark","Billion Kwh",0.017,0.017,0.013,0.015,0.018
+"","France","Billion Kwh",44.242,57.997,69.85,62.061,53.774
+"","Germany","Billion Kwh",17.303,21.365,22.654,19.321,18.667
+"","Luxembourg","Billion Kwh",0.065,0.095,0.114,0.104,0.095
+"","Netherlands","Billion Kwh",0.057,0.104,0.114,0.112,0.093
+"","Norway","Billion Kwh",119.784,141.194,127.534,134.796,137.306
+"","Poland","Billion Kwh",2.313,2.02,2.421,2.165,1.814
+"","Sweden","Billion Kwh",66.047,78.333,60.81,63.227,74.734
+"","Switzerland","Billion Kwh",32.069,38.218,38.08,37.659,37.879 

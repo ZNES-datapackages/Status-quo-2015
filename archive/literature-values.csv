@@ -1,0 +1,3 @@
+year,country,carrier,technology,parameter,value,unit,source
+2015,NULL,NULL,NULL,eaf,0.85,per unit,Own assumption
+2015,DE,biomass,NULL,capacity,7170,MW,https://www.energy-charts.de/power_inst_de.htm
