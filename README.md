@@ -9,13 +9,10 @@ If you want to build the package all you need to do is run one script.
 To run the script, make sure the requirements are met e.g. via pip installation. Package six has to be installed beforehand.
 
     pip install six
+    pip install pip==18.1
 
     pip install --process-dependency-links -U -r requirements.txt
 
-**NOTE**: `--process-dependency-links` requires pip version  `<19.x`,
-you can change your pip version as follows:
-
-    pip install pip==18
 
 ### Scope
 
