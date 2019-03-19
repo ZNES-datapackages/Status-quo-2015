@@ -15,7 +15,7 @@ loss = 0.03
 
 filepath = building.input_filepath('transmission.csv')
 
-data = pd.read_csv(filepath, skiprows=3, sep=';', index_col=['from', 'to'])
+data = pd.read_csv(filepath, skiprows=3, index_col=['from', 'to'])
 
 idx = data.index.get_level_values(0).isin(countries) & data.index.get_level_values(1).isin(countries)
 data = data.loc[idx, :]

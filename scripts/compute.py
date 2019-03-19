@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import pandas as pd
 
 
 from oemof.tabular import facades
@@ -11,6 +12,12 @@ from oemof.solph import EnergySystem, Model
 
 """
 """
+
+for f in os.listdir('data/sequences/'):
+    fname = os.path.join('data', 'sequences', f)
+    df = pd.read_csv(fname, sep=';')
+    df = df.iloc[:8760]
+    df.to_csv(fname, index=False, sep=';')
 
 config = building.read_build_config('config.toml')
 

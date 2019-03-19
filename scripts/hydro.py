@@ -119,7 +119,7 @@ for country in countries:
             'storage_capacity': capacities.loc[country, 'rsv_capacity'],
             'profile': country + '-reservoir-profile',
             'efficiency': eta,
-            'marginal_cost': 0.00000001
+            'marginal_cost': 0.0000001
             }
 
 building.write_elements(
@@ -152,8 +152,8 @@ for country in countries:
             'loss': 0,
             'marginal_cost': 0.0000001,
             'storage_capacity': capacity * 6,  # max hours # Brown et al.
-            'storage_capacity_inital': 0.5,
-            'efficiency': eta
+            'storage_capacity_initial': 0.5,
+            'efficiency': 0.90
             }
 
 building.write_elements(
