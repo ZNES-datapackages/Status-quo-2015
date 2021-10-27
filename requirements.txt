@@ -16,7 +16,7 @@ cligj==0.5.0
 cryptography==2.6.1
 cycler==0.10.0
 cyordereddict==1.0.0
-dask==1.1.4
+dask==2021.10.0
 datapackage==1.5.1
 decorator==4.4.0
 dill==0.2.9
