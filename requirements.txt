@@ -44,7 +44,7 @@ numpy==1.16.2
 -e git+git@github.com:oemof/oemof-tabular.git@4efa446ce8e442ca51079745f93303b8b913053c#egg=oemof.tabular
 openpyxl==2.4.11
 pandas==0.23.4
-paramiko==2.4.2
+paramiko==2.10.1
 parso==0.3.4
 pexpect==4.6.0
 pickleshare==0.7.5
