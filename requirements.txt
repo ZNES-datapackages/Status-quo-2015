@@ -39,7 +39,7 @@ matplotlib==3.0.3
 nbformat==4.4.0
 networkx==2.2
 nose==1.3.7
-numpy==1.16.2
+numpy==1.22.0
 # oemof==0.2.4.dev0 ecac61bf1f141000d2ec070ba5562db309ffef77
 -e git+git@github.com:oemof/oemof-tabular.git@4efa446ce8e442ca51079745f93303b8b913053c#egg=oemof.tabular
 openpyxl==2.4.11
